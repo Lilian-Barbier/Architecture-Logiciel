@@ -16,7 +16,7 @@
 \begin{center}
 \begin{tikzpicture}
 
-\begin{umlpackage}{}
+\begin{umlpackage}{Model}
 
 \begin{umlpackage}[x=7]{liste}
 
@@ -90,9 +90,12 @@
 \umlunicompo[geometry=|-, arg2=-builder, mult2=1..1]{XMLList}{ListBuilder}
 
 
+\end{umlpackage}
 
 
-\begin{umlpackage}{editeur}
+\begin{umlpackage}[y=7, x=10]{Controller}
+
+\umlclass[]{Player}{}{}
 
 \umlclass[type=interface]{Editor}
 {}{
@@ -110,8 +113,15 @@
 \end{umlpackage}
 
 
+\begin{umlpackage}[y=7]{View}
+
+\umlclass[]{GraphicPlayer}{}{}
+\umlclass[]{LinePlayer}{}{}
+\umlclass[]{GraphicEditor}{}{}
+\umlclass[]{LineEditor}{}{}
 
 \end{umlpackage}
+
 
 
 \end{tikzpicture}
