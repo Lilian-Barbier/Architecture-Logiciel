@@ -1,0 +1,14 @@
+<list name="test" duration=15>
+	<audio>
+		<title>audio</title>
+		<duration>10</duration>
+		<artist>jean-michel</artist>
+	</audio>
+	<list name="sublist" duration=5>
+		<video>
+			<title>video2</title>
+			<duration>5</duration>
+			<resolution>1920x1080</resolution>
+		</video>
+	</list>
+</list>

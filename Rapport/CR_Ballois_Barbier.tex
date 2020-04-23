@@ -1,0 +1,119 @@
+\documentclass[a4paper,11pt, svgnames]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{listings}
+\usepackage{fancyvrb}
+\usepackage{./tikz-uml}
+\usetikzlibrary{positioning}
+
+\date{}
+\title{}
+\author{}
+
+\begin{document}
+\begin{center}
+\begin{tikzpicture}
+
+\begin{umlpackage}{}
+
+\begin{umlpackage}[x=7]{liste}
+
+\umlemptyclass[type=interface]{List}
+
+\umlclass[y=-3]{Audio}{
+	- duration : int \\
+	- name : String \\
+	- artist : String
+}{}
+
+\umlclass[y=-3, x=4]{Video}
+{	
+	- duration : int \\
+	- name : String \\
+	- resolution : String
+}{}
+  
+\umlclass[y=-3, x=10]{SubList}
+{	
+	- duration : int \\
+	- name : String 
+}{
+	+ add (l: List) : void \\
+	+ remove (l: List) : void \\
+	+ getChild () : List
+}
+    
+    
+\umlclass[type=interface, y=-7]{ListBuilder}
+{}{
+	+ startList () : void \\
+	+ setName (t : String) : void \\
+	...
+}    
+
+\umlclass[ y=-7, x=6]{ListBuilderStd}
+{}{
+	+ getList() : ListComposant
+}    
+    
+  
+\umluniaggreg[geometry=|-, arg2=- contains, mult2=0..*, pos2=0.2 ]{SubList}{List}  
+\umlimpl[]{SubList}{List} 
+\umlimpl[]{Audio}{List} 
+\umlimpl[]{Video}{List} 
+
+\umlimpl[]{ListBuilderStd}{ListBuilder} 
+\umldep[]{ListBuilderStd}{Audio} 
+\umldep[]{ListBuilderStd}{Video} 
+\umldep[]{ListBuilderStd}{SubList} 
+\umldep[]{ListBuilderStd}{List}
+
+\end{umlpackage}
+
+
+
+
+\begin{umlpackage}{liste/xml}
+
+\umlclass[]{XMLList}
+{}{
+	+ load(f : File) : void \\
+	+ save() : void \\
+	... (peut être séparé en deux classes \\
+	XMLListLoader et XMLListSaver) ...
+}    
+
+\end{umlpackage}
+
+\umlunicompo[geometry=|-, arg2=-builder, mult2=1..1]{XMLList}{ListBuilder}
+
+
+
+
+\begin{umlpackage}{editeur}
+
+\umlclass[type=interface]{Editor}
+{}{
+	+ createList(name : String) : void \\
+	+ load() : void \\
+	+ save() : void \\
+	+ showInfos() : void \\
+	+ addFile() : void \\
+	+ addFolder() : void \\
+	+ addList() : void \\
+	+ getChild(l : List) : List\\
+	+ getParent(l : List) : List \\
+}    
+
+\end{umlpackage}
+
+
+
+\end{umlpackage}
+
+
+\end{tikzpicture}
+\end{center}
+\end{document}
