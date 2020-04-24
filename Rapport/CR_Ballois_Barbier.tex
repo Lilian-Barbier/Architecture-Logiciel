@@ -13,12 +13,13 @@
 \author{}
 
 \begin{document}
+
 \begin{center}
 \begin{tikzpicture}
 
 \begin{umlpackage}{Model}
 
-\begin{umlpackage}[x=7]{liste}
+\begin{umlpackage}{liste}
 
 \umlemptyclass[type=interface]{List}
 
@@ -73,11 +74,9 @@
 \end{umlpackage}
 
 
-
-
 \begin{umlpackage}{liste/xml}
 
-\umlclass[]{XMLList}
+\umlclass[y=-12]{XMLList}
 {}{
 	+ load(f : File) : void \\
 	+ save() : void \\
@@ -87,15 +86,20 @@
 
 \end{umlpackage}
 
-\umlunicompo[geometry=|-, arg2=-builder, mult2=1..1]{XMLList}{ListBuilder}
+\umlunicompo[arg2=-builder, mult2=1..1]{XMLList}{ListBuilder}
 
 
 \end{umlpackage}
 
+\end{tikzpicture}
+\end{center}
 
-\begin{umlpackage}[y=7, x=10]{Controller}
+\newpage
 
-\umlclass[]{Player}{}{}
+
+\begin{tikzpicture}
+\begin{center}
+\begin{umlpackage}{Controller}
 
 \umlclass[type=interface]{Editor}
 {}{
@@ -110,20 +114,50 @@
 	+ getParent(l : List) : List \\
 }    
 
+\umlclass[y=-5]{StdEditor}
+{}{}    
+
+\umlclass[type=interface, x=6]{Player}
+{}{
+	+ load() : void \\
+	+ showInfos() : void \\
+	+ play() : void \\
+	+ stop() : void
+}    
+
+\umlclass[y=-5, x=6]{StdPlayer}
+{}{}   
+
 \end{umlpackage}
 
+\umlimpl[]{StdEditor}{Editor} 
+\umlimpl[]{StdPlayer}{Player} 
 
-\begin{umlpackage}[y=7]{View}
+\end{center}
+\end{tikzpicture}
+
+
+
+\newpage
+
+
+\begin{tikzpicture}
+\begin{center}
+
+\begin{umlpackage}[]{View}
 
 \umlclass[]{GraphicPlayer}{}{}
-\umlclass[]{LinePlayer}{}{}
-\umlclass[]{GraphicEditor}{}{}
-\umlclass[]{LineEditor}{}{}
+\umlclass[y=2]{LinePlayer}{}{}
+\umlclass[y=4]{GraphicEditor}{}{}
+\umlclass[y=6]{LineEditor}{}{}
 
 \end{umlpackage}
 
 
 
-\end{tikzpicture}
 \end{center}
+\end{tikzpicture}
+
+
+
 \end{document}
