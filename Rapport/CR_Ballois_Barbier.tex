@@ -47,19 +47,23 @@
 }
     
     
-\umlclass[type=interface, y=-7]{ListBuilder}
+\umlclass[type=interface, y=-8]{ListBuilder}
 {}{
 	+ startList () : void \\
+	+ stopList () : void \\
+	+ startAudio () : void \\
+	+ stopAudio () : void \\
+	+ startVideo () : void \\
+	+ stopVideo () : void \\
 	+ setName (t : String) : void \\
 	...
-}    
+}   
 
 \umlclass[ y=-7, x=6]{ListBuilderStd}
 {}{
 	+ getList() : ListComposant
 }    
     
-  
 \umluniaggreg[geometry=|-, arg2=- contains, mult2=0..*, pos2=0.2 ]{SubList}{List}  
 \umlimpl[]{SubList}{List} 
 \umlimpl[]{Audio}{List} 
@@ -73,16 +77,16 @@
 
 \end{umlpackage}
 
-
 \begin{umlpackage}{liste/xml}
 
-\umlclass[y=-12]{XMLList}
+\umlclass[y=-14]{XMLList}
 {}{
 	+ load(f : File) : void \\
 	+ save() : void \\
 	... (peut être séparé en deux classes \\
-	XMLListLoader et XMLListSaver) ...
-}    
+	XMLListLoader et XMLListSaver \\ 
+	Respect du SRP ?) ...
+}     
 
 \end{umlpackage}
 
@@ -90,6 +94,16 @@
 
 
 \end{umlpackage}
+
+\umlclass[y=-14, x=7]{FacadeList}{}{} 
+
+\begin{umlpackage}{SAXPackage}
+
+\umlclass[y=-19]{SAX}{}{} 
+\umluniassoc[]{XMLList}{SAX}
+
+\end{umlpackage}
+
 
 \end{tikzpicture}
 \end{center}
@@ -155,7 +169,6 @@
 \begin{umlpackage}[]{GraphicView}
 
 \umlclass[]{GraphicPlayer}{}{}
-\umlclass[y=2]{GraphicEditor}{}{}
 
 \end{umlpackage}
 
