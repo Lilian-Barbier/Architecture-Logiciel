@@ -119,31 +119,10 @@
 \umlclass[y=-5]{StdEditor}
 {}{}    
 
-\umlclass[type=interface, x=5]{Player}
-{}{
-	+ load() : void \\
-	+ showInfos() : void \\
-	+ play() : void \\
-	+ stop() : void
-}    
-
-\umlclass[y=-5, x=5]{StdPlayer}
-{}{}   
-
-\umlclass[type=interface, x=9]{Observer}
-{}{
-	+ update()
-}    
-
-\umlclass[y=-5, x=9]{ConcreteObservers}
-{}{}   
 
 \end{umlpackage}
 
-
-
-\begin{umlpackage}[y=-10]{Controller}
-
+\begin{umlpackage}[y=-10]{PlayerController}
    
 \umlclass[type=interface, x=5]{Player}
 {}{
@@ -155,15 +134,6 @@
 
 \umlclass[y=-5, x=5]{StdPlayer}
 {}{}   
-
-\umlclass[type=interface, x=9]{Observer}
-{}{
-	+ update()
-}    
-
-\umlclass[y=-5, x=9]{ConcreteObservers}
-{}{}   
-
 
 \end{umlpackage}
 
