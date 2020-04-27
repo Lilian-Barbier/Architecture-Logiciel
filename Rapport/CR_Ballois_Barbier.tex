@@ -98,8 +98,10 @@
 
 
 \begin{tikzpicture}
+
 \begin{center}
-\begin{umlpackage}{Controller}
+
+\begin{umlpackage}{EditorController}
 
 \umlclass[type=interface]{Editor}
 {}{
@@ -117,7 +119,7 @@
 \umlclass[y=-5]{StdEditor}
 {}{}    
 
-\umlclass[type=interface, x=6]{Player}
+\umlclass[type=interface, x=5]{Player}
 {}{
 	+ load() : void \\
 	+ showInfos() : void \\
@@ -125,13 +127,49 @@
 	+ stop() : void
 }    
 
-\umlclass[y=-5, x=6]{StdPlayer}
+\umlclass[y=-5, x=5]{StdPlayer}
 {}{}   
+
+\umlclass[type=interface, x=9]{Observer}
+{}{
+	+ update()
+}    
+
+\umlclass[y=-5, x=9]{ConcreteObservers}
+{}{}   
+
+\end{umlpackage}
+
+
+
+\begin{umlpackage}[y=-10]{Controller}
+
+   
+\umlclass[type=interface, x=5]{Player}
+{}{
+	+ load() : void \\
+	+ showInfos() : void \\
+	+ play() : void \\
+	+ stop() : void
+}    
+
+\umlclass[y=-5, x=5]{StdPlayer}
+{}{}   
+
+\umlclass[type=interface, x=9]{Observer}
+{}{
+	+ update()
+}    
+
+\umlclass[y=-5, x=9]{ConcreteObservers}
+{}{}   
+
 
 \end{umlpackage}
 
 \umlimpl[]{StdEditor}{Editor} 
 \umlimpl[]{StdPlayer}{Player} 
+\umlimpl[]{ConcreteObservers}{Observer} 
 
 \end{center}
 \end{tikzpicture}
@@ -144,15 +182,19 @@
 \begin{tikzpicture}
 \begin{center}
 
-\begin{umlpackage}[]{View}
+\begin{umlpackage}[]{GraphicView}
 
 \umlclass[]{GraphicPlayer}{}{}
-\umlclass[y=2]{LinePlayer}{}{}
-\umlclass[y=4]{GraphicEditor}{}{}
-\umlclass[y=6]{LineEditor}{}{}
+\umlclass[y=2]{GraphicEditor}{}{}
 
 \end{umlpackage}
 
+\begin{umlpackage}[x=5]{TerminalView}
+
+\umlclass{TerminalEditor}{}{}
+\umlclass[y=2]{TerminalPlayer}{}{}
+
+\end{umlpackage}
 
 
 \end{center}
