@@ -1,0 +1,102 @@
+\documentclass{univ-projet}
+
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{multirow}
+ 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,               
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{language=Java,style=mystyle}
+
+
+\logo{logo_univ.png}
+\author{Marion Delacour, Coraline Guerre}
+\title{Architecture distribuée} 
+\projdesc{M1 Informatique}
+\projet{Création d'un service RESTFUL}
+\date{25 Mars 2020}
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+\clearpage
+ 
+\section{Introduction}
+
+Pour cette partie du TP, nous avons rencontré une difficulté lors de l'ajout du web service Wolfram|Alpha afin d'obtenir plus d'informations sur la ville / bâtiment.
+En effet, nous ne comprenions pas pourquoi l'appel à ce service ne produisait rien en résultat. Il s'est avéré que nous étions bloquées par un proxy à cause d'une requête multi-origine (Cross-origin resource sharing : CORS). La polique "Same Origin" ne nous permet pas de consulter la ressource distante située sur \textit{http://api.wolframalpha.com/api/explorer.html} car l'en-tête CORS "Access-Control-Allow-Origin" est manquant. Nous ne sommes pas en mesure de résoudre ce problème à moins d'avoir des habilités de hackage.
+
+
+\section{Création d’un service}
+
+Pour cette seconde partie du TP, nous nous retrouvions avec une erreur lors de la demande d'affichage d'un autre message. Nous ne fermions pas le service avant de faire une autre demande.
+
+\section{Création d’un service RESTFUL}
+
+Pour le développement du service RESTFUL, nous avons rencontré un certain nombre de difficultés. La difficulté majeure était la compréhension de l'énoncé, nous ne percevions pas correctement le but de certaines méthodes. Il s'est avéré que le sujet était delibérément flou sur certains points afin de nous laisser interpréter à notre façon les résultats pour ensuite les justifier.
+
+Ensuite, pour la première méthode que nous devions produire (la modification de tous les animaux), nous devions choisir le contenu du body de la requête. Nous ne savions pas vraiment comment implanter cette méthode, nous avons donc suivi le scénario fourni en modifiant l'espèce de l'ensemble des animaux et de transférer ces derniers dans une cage donnée en paramètre. Pour ce faire, nous avons décidé de développer une classe nommée \textit{UpdateAnimal} qui prend en paramètre l'espèce et la cage à attribuer. Elle possède une méthode pour mettre à jour le centre en modifiant l'espèce des animaux par celle qu'elle contient et en transférant ces derniers dans la cage qui lui a été attribuée.
+
+Un autre de nos problèmes rencontrés est l'obtention d'une \textit{NullPointerException} lorsque nous passions, du côté client, une cage en paramètre à la méthode \textit{invoke(...)} du service :
+\begin{lstlisting}
+// class MyClient
+	Cage cage = new Cage(name, new Position(lat, lng), 10, 
+			new LinkedList<Animal>());
+    ...
+	dispatcher.invoke(new JAXBSource(jc, cage))
+\end{lstlisting}
+
+La \textit{LinkedList} de la cage récupérée avec \textit{unmarshalCage(Source source)} côté serveur était \textit{null} et causait ainsi une \textit{NullPointerException}. Pour remédier à ce problème nous avons décidé de mettre la liste à \textit{null} côté client :
+\begin{lstlisting}
+// class MyClient
+	Cage cage = new Cage(name, new Position(lat, lng), 10, null);
+    ...
+	dispatcher.invoke(new JAXBSource(jc, cage))
+\end{lstlisting}
+et de l'instancier côté serveur :
+\begin{lstlisting}
+// class MyServiceTP
+	Cage cage = unmarshalCage(source);
+	cage.setResidents(new LinkedList<Animal>());
+\end{lstlisting}
+
+Ensuite, nous avons eu quelques complications pour afficher un ensemble d'animaux et de cages. Nous avons tout d'abord essayé de renvoyer une \textit{LinkedList} puis une \textit{ArrayList} avec nos fonctions mais les classes n'étant pas sérialisables, nous nous sommes vite aperçu que nous n'aurions pas de résultats en XML avec de telles classes. Pour résoudre le problème, nous avons implanté les classes \textit{AnimalList} et \textit{CageList} qui sont des classes sérialisables contenant respectivement en attribut une collection d'animaux / de cages. Ces classes nous permettent ainsi d'avoir un ensemble d'animaux ou de cages à afficher en XML.
+
+Enfin, nous avons rencontré un problème lors du renvoi d'exceptions par le serveur. Par exemple, lorsque l'UUID n'existe pas pour l'URL \textit{/animals/\{animal\_id\}} une exception est renvoyée mais les exceptions n'étant pas sérialisables cela ne fournissait pas un affichage convenable. Nous avons ainsi développer une classe sérialisable \textit{HandleError} permettant de sérialiser une erreur en prenant comme attributs deux chaînes de caractères :
+\begin{itemize}
+\item une pour le type d'erreur ;
+\item une pour le message à afficher.
+\end{itemize}
+Nous avons également implanté l'exception \textit{CageNotFoundException} en plus de l'exception \textit{AnimalNotFoundException} qui nous était donnée.
+
+\vspace{1.5em}
+
+En précisions, pour les méthodes \textit{/find/at/\{position\}}, \textit{/find/near/\{position\}} et \textit{/center/journey/from/\{position\}}, nous avons fait le choix que la position donnée dans l'URL ne soit pas le nom d'une cage comme dans le scénario mais une vraie position sous la forme \textbf{"latitude\&longitude"}. Nous avons trouvé que cette interprétation était plus convenable pour le traitement d'une position au vu de la définition de la classe d'une position.
+
+De plus, lorsqu'une cage a atteint sa capacité maximale, nous avons décidé d'en créer une nouvelle identique quitte à ce qu'un animal se retrouve tout seul. Nous aurions pu afficher une erreur mais nous avons préféré développer ce mécanisme de clonage, la réorganisation des cages ne nous semblait pas correcte et plus complexe car nous ne pouvons pas savoir à l'avance combien d'animaux seront rajoutés. Ainsi, lorsqu'un animal est ajouté au centre, si la cage qui lui est associée est pleine nous en créons une autre identique et plaçons l'animal dedans. Ceci implique que pour la recherche par nom de cage, nous recherchons la cage qui n'est pas pleine ou la première cage trouvée en cas de capacité atteinte. Certes une telle expansion de cage n'est pas très réaliste mais nous avons trouvé intéressant de traiter ce problème de capacité de cette façon au lieu de simplement renvoyer une erreur.
+
+\end{document}
