@@ -4,20 +4,24 @@ public class ListBuilderStd implements ListBuilder {
 
     // ATTRIBUTS
 
-    private List list;
+    private IList list;
 
     // CONSTRUCTEUR
 
-    public ListBuilderStd(List list) {
+    public ListBuilderStd(IList list) {
         if (list == null) {
             throw new AssertionError("Paramètre invalide ListBuilderStd constructeur");
         }
-        list = new SubList();
+        this.list = list;
+    }
+
+    public ListBuilderStd() {
+        this.list = new List();
     }
 
     // METHODES
 
-    public List getList() {
+    public IList getList() {
         return list;
     }
 
@@ -25,6 +29,30 @@ public class ListBuilderStd implements ListBuilder {
 
     @Override
     public void startList() {
+    }
+
+    @Override
+    public void stopList() {
+
+    }
+
+    @Override
+    public void startAudio() {
+
+    }
+
+    @Override
+    public void stopAudio() {
+
+    }
+
+    @Override
+    public void startVideo() {
+
+    }
+
+    @Override
+    public void stopVideo() {
 
     }
 
