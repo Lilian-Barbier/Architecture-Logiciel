@@ -1,0 +1,7 @@
+<!DOCTYPE playlist
+[
+	<!ELEMENT playlist (sublist | audio | video)*>
+	<!ELEMENT audio (#PCDATA)>
+	<!ELEMENT video (#PCDATA)>
+	<!ELEMENT sublist (#PCDATA)>
+]>
