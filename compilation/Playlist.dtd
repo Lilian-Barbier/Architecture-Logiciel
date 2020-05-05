@@ -1,0 +1,7 @@
+<!ELEMENT playlist (sublist | audio | video)*>
+<!ELEMENT audio (#PCDATA)>
+<!ELEMENT video (#PCDATA)>
+
+<!ELEMENT sublist (sublist | audio | video)*>
+<!ATTLIST sublist title CDATA #REQUIRED>
+

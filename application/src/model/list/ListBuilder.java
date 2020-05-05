@@ -4,12 +4,18 @@ public interface ListBuilder {
 
     // COMMANDES
 
-    void startList();
-    void stopList();
+    void startSublist();
+    void stopSublist();
+    
     void startAudio();
     void stopAudio();
+    
     void startVideo();
     void stopVideo();
-    void setName(String name);
-    void setDuration(int duration);
+    
+    void addName(String name);
+    void addPath(String path);
+    
+    public Playlist getPlaylist();
+    
 }

@@ -46,44 +46,29 @@ public class XMLList {
         return builder;
     }
 
+    
     // COMMANDES
-
-    public void load(File f) throws ParserConfigurationException, SAXException, IOException {
-        try {
-
-            SAXParserFactory factory = SAXParserFactory.newInstance();
+    public void load(File f) {
+        
+    	try {
+        	SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
 
-            DefaultHandler handler = new DefaultHandler() {
-
-                boolean flist = false;
-                boolean fsublist = false;
-                public void startElement(String uri, String localName,String qName,
-                                         Attributes attributes) throws SAXException {
-
-                    System.out.println("Start Element :" + qName);
-                    if (qName.equalsIgnoreCase("LIST")) {
-                        flist = true;
-                    }
-                    if (qName.equalsIgnoreCase("SUBLIST")) {
-                        fsublist = true;
-                    }
-                }
-
-                public void endElement(String uri, String localName,
-                                       String qName) throws SAXException {
-                    System.out.println("End Element :" + qName);
-                }
-            };
-
+            XplPlaylistHandler handler = new XplPlaylistHandler(builder);
             saxParser.parse(f, handler);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+    	
+    	this.builder.getPlaylist();
     }
 
+    
+    
+    
+    
+    
     public void save() {
         // On récupère tout les éléments à ajouter
         java.util.List<IList> fullList = new ArrayList<IList>();
@@ -117,4 +102,18 @@ public class XMLList {
             }
         }
     }
+    
+    
+    
+    public static void main(String argv[]) {
+    	 
+    	File f = new File("/home/barbier/Documents/TP-Master/ArchiLogicielle/Projet/ArchiLogiciel/compilation/playlist.xpl");
+    	XMLList loader = new XMLList();
+    	
+		loader.load(f);
+		
+
+    }
+    
+    
 }
