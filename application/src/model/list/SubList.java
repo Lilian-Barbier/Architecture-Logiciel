@@ -1,28 +1,32 @@
 package model.list;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SubList extends List {
+public class SubList extends model.list.List {
 
     // ATTRIBUTS
-
-    private SortedSet<IList> contains;
+    private java.util.List<IList> contains;
 
     // CONSTRUCTEUR
     public SubList(int duration, String name) {
         super(duration, name);
-        this.contains = new TreeSet<IList>();
+        this.contains = new ArrayList<IList>();
     }
 
     public SubList() {
         this.setDuration(0);
         this.setName("new list");
     }
+    
+    public SubList(List<IList> contains, String name) {
+        super(0, name);
+    	this.setContains(contains);
+    }
 
     // METHODES
 
-    public SortedSet<IList> getContains() {
+    public List<IList> getContains() {
         return contains;
     }
 
@@ -34,7 +38,7 @@ public class SubList extends List {
         return a[num];
     }
 
-    public void setContains(SortedSet<IList> contains) {
+    public void setContains(List<IList> contains) {
         if (contains == null) {
             throw new AssertionError("Paramètre invalide SubList setContains");
         }
@@ -55,4 +59,6 @@ public class SubList extends List {
         }
         contains.remove(list);
     }
+    
+    
 }

@@ -8,6 +8,10 @@ public class Audio extends List {
 
     // CONSTRUCTEUR
 
+    public Audio(String path) {
+        super(path);
+    }
+    
     public Audio(int duration, String name, String artist) {
         super(duration, name);
         if (artist == null) {

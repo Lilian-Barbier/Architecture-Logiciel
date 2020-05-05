@@ -16,9 +16,13 @@ public class Video extends List {
         this.resolution = resolution;
     }
 
+    public Video(String path) {
+    	super(path);
+	}
+    
     // METHODES
 
-    public String getResolution() {
+	public String getResolution() {
         return resolution;
     }
 

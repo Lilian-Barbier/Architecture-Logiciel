@@ -22,6 +22,12 @@ public class List implements IList {
         this.duration = 0;
         this.name = "new list";
     }
+    
+    public List(String path) {
+    	this.path = path;
+        this.duration = 0;
+        this.name = "new list";
+    }
 
     // METHODES
 
