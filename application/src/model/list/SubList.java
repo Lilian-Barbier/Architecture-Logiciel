@@ -3,15 +3,15 @@ package model.list;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubList extends model.list.List {
+public class SubList extends Media {
 
     // ATTRIBUTS
-    private java.util.List<IList> contains;
+    private java.util.List<IMedia> contains;
 
     // CONSTRUCTEUR
     public SubList(int duration, String name) {
         super(duration, name);
-        this.contains = new ArrayList<IList>();
+        this.contains = new ArrayList<IMedia>();
     }
 
     public SubList() {
@@ -19,33 +19,33 @@ public class SubList extends model.list.List {
         this.setName("new list");
     }
     
-    public SubList(List<IList> contains, String name) {
+    public SubList(List<IMedia> contains, String name) {
         super(0, name);
     	this.setContains(contains);
     }
 
     // METHODES
 
-    public List<IList> getContains() {
+    public List<IMedia> getContains() {
         return contains;
     }
 
-    public IList getChild(int num) {
+    public IMedia getChild(int num) {
         if (num < 0) {
             throw new AssertionError("Paramètre invalide SubList getChild");
         }
-        IList[] a = (IList[]) contains.toArray();
+        IMedia[] a = (IMedia[]) contains.toArray();
         return a[num];
     }
 
-    public void setContains(List<IList> contains) {
+    public void setContains(List<IMedia> contains) {
         if (contains == null) {
             throw new AssertionError("Paramètre invalide SubList setContains");
         }
         this.contains = contains;
     }
 
-    public void add(IList list) {
+    public void add(IMedia list) {
         if (list == null) {
             throw new AssertionError("Paramètre invalide SubList add");
         }
@@ -53,7 +53,7 @@ public class SubList extends model.list.List {
         contains.add(list);
     }
 
-    public void remove(IList list) {
+    public void remove(IMedia list) {
         if (list == null) {
             throw new AssertionError("Paramètre invalide SubList remove");
         }

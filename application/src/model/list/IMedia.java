@@ -1,6 +1,6 @@
 package model.list;
 
-public interface IList {
+public interface IMedia {
 
     // METHODES
 

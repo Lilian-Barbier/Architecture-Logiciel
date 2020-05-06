@@ -5,7 +5,6 @@ public enum MediaType {
 	Nothing,
 	Audio,
 	Video,
-	Playlist,
 	Sublist
 	
 }

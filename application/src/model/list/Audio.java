@@ -1,6 +1,6 @@
 package model.list;
 
-public class Audio extends List {
+public class Audio extends Media {
 
     // ATTRIBUTS
 

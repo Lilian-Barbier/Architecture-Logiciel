@@ -1,5 +1,7 @@
 package model.list;
 
+import model.playlist.Playlist;
+
 public interface ListBuilder {
 
     // COMMANDES

@@ -1,7 +1,9 @@
-package Facade.player;
+package facade.player;
 
-import model.list.IList;
-import model.list.Playlist;
+import model.list.IMedia;
+import model.playlist.IPlaylistManager;
+import model.playlist.Playlist;
+import model.playlist.PlaylistManager;
 
 import java.io.File;
 
@@ -9,14 +11,16 @@ public class StdPlayerModel implements  IPlayerModel {
 
     // ATTRIBUTS
 
+    private IPlaylistManager manager;
     private Playlist currentPlaylist;
     private Playlist parentPlaylist;
     private int headDuration;
-    private  Thread chrono;
+    private Thread chrono;
 
     // CONSTRUCTEUR
 
     public StdPlayerModel() {
+        manager = new PlaylistManager();
         currentPlaylist = new Playlist();
         parentPlaylist = new Playlist();
         headDuration = 0;
@@ -37,13 +41,18 @@ public class StdPlayerModel implements  IPlayerModel {
         return headDuration;
     }
 
+    public int getMediaDuration() {
+        IMedia current = currentPlaylist.getCurrentFile();
+        return current.getDuration();
+    }
+
     @Override
     public String getInfos() {
         int duration = 0;
-        for (IList list : currentPlaylist.getPlaylist().subList(0, currentPlaylist.getPlaylist().size())) {
+        for (IMedia list : currentPlaylist.getPlaylist().subList(0, currentPlaylist.getPlaylist().size())) {
             duration = duration + list.getDuration();
         }
-        IList current = currentPlaylist.getCurrentFile();
+        IMedia current = currentPlaylist.getCurrentFile();
         return "playlist name = " + currentPlaylist.getName() +
                 " total duration " + duration +
                 " current file name " + current.getName() +
@@ -84,7 +93,7 @@ public class StdPlayerModel implements  IPlayerModel {
 
     @Override
     public void load(File f) {
-
+        manager.load(f);
     }
 
     @Override
@@ -95,7 +104,7 @@ public class StdPlayerModel implements  IPlayerModel {
             incrementHeadDuration();
         }
         if (headDuration == currentPlaylist.getCurrentFile().getDuration()) {
-            next();
+            foreward();
         }
     }
 
@@ -105,13 +114,14 @@ public class StdPlayerModel implements  IPlayerModel {
     }
 
     @Override
-    public void stop() {
+    public void stop() throws InterruptedException {
+        chrono.wait();
         headDuration = 0;
         currentPlaylist.setHead(0);
     }
 
     @Override
-    public void foreward() {
+    public void foreward() throws InterruptedException {
         int current = currentPlaylist.getHead();
         if (current < currentPlaylist.getPlaylist().size()) {
             currentPlaylist.setHead(current + 1);
@@ -129,12 +139,12 @@ public class StdPlayerModel implements  IPlayerModel {
     }
 
     @Override
-    public void next() {
+    public void nextList() {
 
     }
 
     @Override
-    public void previous() {
+    public void previousList() {
 
     }
 

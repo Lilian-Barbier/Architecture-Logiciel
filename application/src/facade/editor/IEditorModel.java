@@ -1,4 +1,4 @@
-package Facade.editor;
+package facade.editor;
 
 import java.io.File;
 import java.io.IOException;

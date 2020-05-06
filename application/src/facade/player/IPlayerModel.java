@@ -1,4 +1,4 @@
-package Facade.player;
+package facade.player;
 
 import java.io.File;
 
@@ -16,8 +16,8 @@ public interface IPlayerModel {
     void play() throws InterruptedException;
     void pause() throws InterruptedException;
     void stop() throws InterruptedException;
-    void foreward();
+    void foreward() throws InterruptedException;
     void backward();
-    void next();
-    void previous();
+    void nextList();
+    void previousList();
 }

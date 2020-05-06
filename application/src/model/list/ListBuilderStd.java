@@ -1,9 +1,10 @@
 package model.list;
 
+import model.playlist.Playlist;
+
 import java.util.List;
-import java.util.Map;
 import java.util.ArrayList;
-import java.util.HashMap;;
+;
 
 public class ListBuilderStd implements ListBuilder {
 
@@ -12,11 +13,11 @@ public class ListBuilderStd implements ListBuilder {
     private MediaType type;
     
     private String path;
-    private List<IList> subList;
+    private List<IMedia> subList;
     private String name;
     
     private int depthList;
-    private List<List<IList>> subListsMedias;
+    private List<List<IMedia>> subListsMedias;
     private List<String> subListsName;
     
     // CONSTRUCTEUR
@@ -27,7 +28,7 @@ public class ListBuilderStd implements ListBuilder {
         this.playlist = playlist;
         this.type = MediaType.Nothing;
         
-        this.subListsMedias = new ArrayList<List<IList>>();
+        this.subListsMedias = new ArrayList<List<IMedia>>();
         this.depthList = 0;
         this.subListsName = new ArrayList<String>();
     }
@@ -36,7 +37,7 @@ public class ListBuilderStd implements ListBuilder {
         this.playlist = new Playlist();
         this.type = MediaType.Nothing;
         
-        this.subListsMedias = new ArrayList<List<IList>>();
+        this.subListsMedias = new ArrayList<List<IMedia>>();
         this.depthList = 0;
         this.subListsName = new ArrayList<String>();
     }
@@ -60,7 +61,7 @@ public class ListBuilderStd implements ListBuilder {
     	this.type = MediaType.Sublist;
     	
     	depthList++;
-    	this.subListsMedias.add(new ArrayList<IList>());
+    	this.subListsMedias.add(new ArrayList<IMedia>());
     }
 
     
@@ -94,8 +95,7 @@ public class ListBuilderStd implements ListBuilder {
     	
 
     }
-    
-    
+
     @Override
     public void startAudio() {    	
     	//Un audio ne peut pas être dans une video
@@ -126,7 +126,7 @@ public class ListBuilderStd implements ListBuilder {
     		subListsMedias.get(depthList-1).add(a);
         	type = MediaType.Sublist;
     	}
-    	//Si il est contenus dans la List Principale
+    	//Si il est contenus dans la Media Principale
     	else {
     		playlist.addFile(a);
         	type = MediaType.Nothing;
@@ -159,7 +159,7 @@ public class ListBuilderStd implements ListBuilder {
     		subListsMedias.get(depthList-1).add(v);
         	type = MediaType.Sublist;
     	}
-    	//Si elle est contenus dans la List Principale
+    	//Si elle est contenus dans la Media Principale
     	else {
     		playlist.addFile(v);
         	type = MediaType.Nothing;

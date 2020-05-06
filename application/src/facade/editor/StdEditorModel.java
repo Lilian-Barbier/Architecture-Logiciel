@@ -1,9 +1,10 @@
-package Facade.editor;
+package facade.editor;
 
-import model.list.IList;
-import model.list.List;
-import model.list.Playlist;
-import model.list.SubList;
+import model.list.*;
+import model.playlist.IPlaylistManager;
+import model.playlist.Playlist;
+import model.playlist.PlaylistManager;
+import model.xml.XMLPlaylistManager;
 
 import java.io.*;
 
@@ -11,12 +12,14 @@ public class StdEditorModel implements IEditorModel {
 
     // ATTRIBUTS
 
+    private IPlaylistManager manager;
     private Playlist currentPlaylist;
     private Playlist parentPlaylist;
 
     // CONSTRUCTEUR
 
     public StdEditorModel() {
+        manager = new PlaylistManager();
         currentPlaylist = new Playlist();
         parentPlaylist = new Playlist();
     }
@@ -34,10 +37,10 @@ public class StdEditorModel implements IEditorModel {
     @Override
     public String getInfos() {
         int duration = 0;
-        for (IList list : currentPlaylist.getPlaylist().subList(0, currentPlaylist.getPlaylist().size())) {
+        for (IMedia list : currentPlaylist.getPlaylist().subList(0, currentPlaylist.getPlaylist().size())) {
             duration = duration + list.getDuration();
         }
-        IList current = currentPlaylist.getCurrentFile();
+        IMedia current = currentPlaylist.getCurrentFile();
         return "playlist name = " + currentPlaylist.getName() +
                 " total duration " + duration;
     }
@@ -77,12 +80,12 @@ public class StdEditorModel implements IEditorModel {
 
     @Override
     public void load(File f) {
-
+        manager.load(f);
     }
 
     @Override
     public void save() {
-
+        manager.save();
     }
 
     @Override
@@ -92,7 +95,7 @@ public class StdEditorModel implements IEditorModel {
         }
         BufferedReader lecteurAvecBuffer = null;
         String ligne;
-        IList list = new List();
+        IMedia list = new Media();
         try {
             lecteurAvecBuffer = new BufferedReader(new FileReader(path));
             list.setDuration(Integer.parseInt(lecteurAvecBuffer.readLine()));
@@ -130,7 +133,7 @@ public class StdEditorModel implements IEditorModel {
         }
         BufferedReader lecteurAvecBuffer = null;
         String ligne;
-        IList list = new SubList();
+        IMedia list = new SubList();
         try {
             lecteurAvecBuffer = new BufferedReader(new FileReader(path));
             list.setDuration(Integer.parseInt(lecteurAvecBuffer.readLine()));

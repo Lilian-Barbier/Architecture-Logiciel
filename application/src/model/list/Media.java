@@ -1,6 +1,6 @@
 package model.list;
 
-public class List implements IList {
+public class Media implements IMedia {
 
     // ATTRIBUTS
 
@@ -10,20 +10,20 @@ public class List implements IList {
 
     // CONSTRUCTEUR
 
-    public List(int duration, String name) {
+    public Media(int duration, String name) {
         if (duration < 0 || name == null) {
-            throw new AssertionError("Paramètre invalide List constructeur");
+            throw new AssertionError("Paramètre invalide Media constructeur");
         }
         this.duration = duration;
         this.name = name;
     }
 
-    public List() {
+    public Media() {
         this.duration = 0;
         this.name = "new list";
     }
     
-    public List(String path) {
+    public Media(String path) {
     	this.path = path;
         this.duration = 0;
         this.name = "new list";
@@ -42,14 +42,14 @@ public class List implements IList {
     }
 
     @Override
-    public String getPath() { return null; }
+    public String getPath() { return path; }
 
     // COMMANDES
 
     @Override
     public void setDuration(int duration) {
         if (duration < 0) {
-            throw new AssertionError("Paramètre invalide List setDuration");
+            throw new AssertionError("Paramètre invalide Media setDuration");
         }
         this.duration = duration;
     }
@@ -57,7 +57,7 @@ public class List implements IList {
     @Override
     public void setName(String name) {
         if (name == null) {
-            throw new AssertionError("Paramètre invalide List setName");
+            throw new AssertionError("Paramètre invalide Media setName");
         }
         this.name = name;
     }
@@ -65,7 +65,7 @@ public class List implements IList {
     @Override
     public void setPath(String path) {
         if (path == null) {
-            throw new AssertionError("Paramètre invalide List setPath");
+            throw new AssertionError("Paramètre invalide Media setPath");
         }
         this.path = path;
     }

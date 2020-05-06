@@ -1,6 +1,6 @@
 package model.list;
 
-public class Video extends List {
+public class Video extends Media {
 
     // ATTRIBUTS
 
