@@ -5,47 +5,64 @@ import model.util.LoadAudio;
 
 import java.util.List;
 import java.util.ArrayList;
-;
 
-public class ListBuilderStd implements ListBuilder {
+@SuppressWarnings("unused")
+public class StdListBuilder implements IListBuilder {
 
     // ATTRIBUTS
 	private String absolutePath;
 
-    private Playlist playlist;
-    private MediaType type;
-    
-    private String path;
-    private List<IMedia> subList;
-    private String name;
-    
-    private int depthList;
-    private List<List<IMedia>> subListsMedias;
-    private List<String> subListsName;
+	/**
+	 * La Playlist construite dans ce StdListBuilder
+	 */
+    private final Playlist playlist;
+
+	/**
+	 * Le type du IMedia en cours de construction
+	 */
+	private MediaType type;
+
+	/**
+	 * Le chemin du IMedia en cours de construction
+	 */
+	private String path;
+
+	/**
+	 * La profondeur du IMedia en cours de construction
+	 */
+	private int depthList;
+
+	/**
+	 * Enregistre la Sublist parent lorsque l'on plonge en profondeur
+	 */
+    private final List<List<IMedia>> subListsMedias;
+
+	/**
+	 * Enregistre le nom de la Sublist parent lorsque l'on plonge en profondeur
+	 */
+	private final List<String> subListsName;
     
     // CONSTRUCTEUR
-    public ListBuilderStd(Playlist playlist, String absolutePath) {
+    public StdListBuilder(Playlist playlist, String absolutePath) {
         if (playlist == null) {
-            throw new AssertionError("Paramètre invalide ListBuilderStd constructeur");
+            throw new AssertionError("Paramètre invalide StdListBuilder constructeur");
         }
 
     	this.absolutePath = absolutePath;
         this.playlist = playlist;
         this.type = MediaType.Nothing;
-        
-        this.subListsMedias = new ArrayList<List<IMedia>>();
+        this.subListsMedias = new ArrayList<>();
         this.depthList = 0;
-        this.subListsName = new ArrayList<String>();
+        this.subListsName = new ArrayList<>();
     }
 
-    public ListBuilderStd(String absolutePath) {
+    public StdListBuilder(String absolutePath) {
     	this.absolutePath = absolutePath;
         this.playlist = new Playlist();
         this.type = MediaType.Nothing;
-        
-        this.subListsMedias = new ArrayList<List<IMedia>>();
+        this.subListsMedias = new ArrayList<>();
         this.depthList = 0;
-        this.subListsName = new ArrayList<String>();
+        this.subListsName = new ArrayList<>();
     }
 
     // METHODES
@@ -57,46 +74,35 @@ public class ListBuilderStd implements ListBuilder {
     // COMMANDES
 
     @Override
-    public void startSublist() {    	
-    	
-    	if(this.type != MediaType.Nothing && this.type != MediaType.Sublist ) {
+    public void startSublist() {
+    	if (this.type != MediaType.Nothing && this.type != MediaType.Sublist ) {
     		//TODO Exception
     		System.out.println("StartAudio : Type not valid ("+ this.type +")");
-    	}	
-    	
+    	}
     	this.type = MediaType.Sublist;
-    	
     	depthList++;
-    	this.subListsMedias.add(new ArrayList<IMedia>());
+    	this.subListsMedias.add(new ArrayList<>());
     }
 
-    
     @Override
     public void stopSublist() {
 		System.out.println("test");
-    	if(this.type != MediaType.Sublist) {
+    	if (this.type != MediaType.Sublist) {
       		System.out.println("stopSublist : Type not valid ("+ this.type +")");
     	}
-    	if(this.subListsMedias.size() != depthList && depthList>=0) {
+    	if (this.subListsMedias.size() != depthList && depthList>=0) {
     		//TODO Exception
     		System.out.println("addName : subListsMedias size not valid");
     	}
-    	
-    	
     	SubList s = new SubList(subListsMedias.get(depthList-1), subListsName.get(depthList-1));
-    	
     	type = MediaType.Nothing;
-    	this.name = null;
-    	
     	subListsMedias.remove(depthList-1);
     	subListsName.remove(depthList-1);
     	depthList--;
-    	
-    	if(depthList > 0) {
+    	if (depthList > 0) {
     		subListsMedias.get(depthList-1).add(s);
     		type = MediaType.Sublist;
-    	}
-    	else {
+    	} else {
     		this.playlist.addFile(s);
     		type = MediaType.Nothing;
     	}
@@ -105,22 +111,21 @@ public class ListBuilderStd implements ListBuilder {
     @Override
     public void startAudio() {    	
     	//Un audio ne peut pas être dans une video
-    	if(this.type != MediaType.Nothing && this.type != MediaType.Sublist ) {
+    	if (this.type != MediaType.Nothing && this.type != MediaType.Sublist ) {
     		//TODO Exception
     		System.out.println("StartAudio : Type not valid ("+ this.type +")");
     	}
-    	
     	this.type = MediaType.Audio;
     	this.path = null;
     }
 
     @Override
     public void stopAudio() {
-    	if(this.type != MediaType.Audio) {
+    	if (this.type != MediaType.Audio) {
     		//TODO Exception
     		System.out.println("StopAudio : Type not valid ("+ this.type +")");
     	}
-    	if(this.path == null){
+    	if (this.path == null){
     		//TODO Exception
     		System.out.println("StopAudio : Path Null");
     	}
@@ -131,42 +136,37 @@ public class ListBuilderStd implements ListBuilder {
     	if(depthList > 0) {
     		subListsMedias.get(depthList-1).add(a);
         	type = MediaType.Sublist;
-    	}
-    	//Si il est contenus dans la Media Principale
-    	else {
+		//Si il est contenu dans la Media principal
+		} else {
     		playlist.addFile(a);
         	type = MediaType.Nothing;
     	}
-    	
     }
 
     @Override
     public void startVideo() {    	
-    	if(this.type != MediaType.Nothing && this.type != MediaType.Sublist ) {
+    	if (this.type != MediaType.Nothing && this.type != MediaType.Sublist ) {
     		//TODO Exception
     		System.out.println("StartVideo : Type not valid");
     	}
-    	
     	type = MediaType.Video;
     	path = null;
     }
 
     @Override
     public void stopVideo() {
-    	if(this.type != MediaType.Video || this.path == null) {
-    		//TODO Exception
-    		System.out.println("StopVideo : Type not valid");
-    	}
-    	
+    	if (this.type != MediaType.Video || this.path == null) {
+			//TODO Exception
+			System.out.println("StopVideo : Type not valid");
+		}
     	Video v = new Video(path);
     	
-    	//Si cette video est contenus dans une sous-liste
-    	if(depthList > 0) {
+    	//Si cette video est contenu dans une sous-liste
+    	if (depthList > 0) {
     		subListsMedias.get(depthList-1).add(v);
         	type = MediaType.Sublist;
-    	}
-    	//Si elle est contenus dans la Media Principale
-    	else {
+		//Si elle est contenu dans le Media principal
+    	} else {
     		playlist.addFile(v);
         	type = MediaType.Nothing;
     	}
@@ -174,24 +174,23 @@ public class ListBuilderStd implements ListBuilder {
 
     @Override
     public void addName(String name) {
-    	if(this.type != MediaType.Sublist) {
+    	if (this.type != MediaType.Sublist) {
     		//TODO Exception
     		System.out.println("addName : Type not valid ("+ this.type +")");
     	}
-    	if(this.subListsMedias.size() != depthList) {
+    	if (this.subListsMedias.size() != depthList) {
     		//TODO Exception
     		System.out.println("addName : subListsMedias size not valid");
     	}
-    	
         this.subListsName.add(name);
     }
     
     @Override
     public void addPath(String path) {
-    	if(this.path != null || this.type == MediaType.Sublist) {
+    	if (path != null || this.type == MediaType.Sublist) {
     		//TODO Exception
-    	}
+			System.out.println("addPath : Type not valid ("+ this.type +") or path == null");
+		}
     	this.path = path;
     }
-    
 }

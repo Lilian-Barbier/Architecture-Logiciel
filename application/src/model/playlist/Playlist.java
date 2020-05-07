@@ -5,20 +5,26 @@ import model.list.IMedia;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Playlist {
+@SuppressWarnings("unused")
+public class Playlist implements IPlaylist {
 
     // ATTRIBUTS
 
+    /**
+     * L'ensemble des IMedia contenus dans cette Playlist
+     */
     private List<IMedia> playlist;
+
+    /**
+     * Le nom de la Playlist
+     */
     private String name;
-    private int head;
 
     // CONSTRUCTEUR
 
     public Playlist() {
         playlist = new ArrayList<>();
         name = "new playlist";
-        head = -1;
     }
 
     public Playlist(String name) {
@@ -26,18 +32,13 @@ public class Playlist {
             throw new AssertionError("Paramètre invalide Playlist constructeur");
         }
         playlist = new ArrayList<>();
-        name = "new playlist";
-        head = -1;
+        this.name = name;
     }
 
     // METHODES
 
     public List<IMedia> getPlaylist() {
         return playlist;
-    }
-
-    public int getHead() {
-        return head;
     }
 
     public String getName() {
@@ -53,10 +54,6 @@ public class Playlist {
         this.playlist = playlist;
     }
 
-    public void setHead(int head) {
-        this.head = head;
-    }
-
     public void setName(String name) {
         if (name == null) {
             throw new AssertionError("Paramètre invalide Playlist setName");
@@ -64,31 +61,25 @@ public class Playlist {
         this.name = name;
     }
 
+    /**
+     * Ajoute à la playlist l'ensemble de IMedia passé en paramètre
+     * @param list l'ensemble de IMedia à ajouter à la playlist
+     */
     public void addList(List<IMedia> list) {
         if (list == null) {
             throw new AssertionError("Paramètre invalide Playlist addList");
         }
-        this.playlist.addAll(list);
-        if (list.size() > 0 && head == -1) {
-            head = 0;
-        }
+        this.getPlaylist().addAll(list);
     }
 
-    public void addFile(IMedia list) {
-        if (list == null) {
+    /**
+     * Ajoute à la playlist le IMedia passé en paramètre
+     * @param media le IMedia à ajouter à la playlist
+     */
+    public void addFile(IMedia media) {
+        if (media == null) {
             throw new AssertionError("Paramètre invalide Playlist addFile");
         }
-        this.playlist.add(list);
-        if (head == -1) {
-            head = 0;
-        }
-    }
-
-    public void incrementHead() {
-        head = head + 1;
-    }
-
-    public void decrementHead() {
-        head = head - 1;
+        this.getPlaylist().add(media);
     }
 }

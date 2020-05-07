@@ -252,7 +252,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
         notifyObserversTime(headDuration);
        
         if (headDuration == getCurrentFile().getDuration()) {
-            if (currentPlaylist.getHead() == currentPlaylist.getPlaylist().size() - 1) {
+            if (map.get(0) == currentPlaylist.getPlaylist().size() - 1) {
                 stop();
             }
             forward();

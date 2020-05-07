@@ -18,7 +18,6 @@ public class StdEditorModel implements IEditorModel {
     // CONSTRUCTEUR
 
     public StdEditorModel() {
-        manager = new XMLPlaylistManager();
         currentPlaylist = new Playlist();
     }
 
@@ -57,6 +56,7 @@ public class StdEditorModel implements IEditorModel {
 
     @Override
     public void load(File f) {
+        manager = new XMLPlaylistManager();
         manager.load(f);
     }
 
@@ -71,7 +71,6 @@ public class StdEditorModel implements IEditorModel {
             throw new AssertionError("Paramètre invalide StdEditorModel addFile");
         }
         BufferedReader lecteurAvecBuffer = null;
-        String ligne;
         IMedia list = new Media();
         try {
             lecteurAvecBuffer = new BufferedReader(new FileReader(path));
@@ -109,7 +108,6 @@ public class StdEditorModel implements IEditorModel {
             throw new AssertionError("Paramètre invalide StdEditorModel addList");
         }
         BufferedReader lecteurAvecBuffer = null;
-        String ligne;
         IMedia list = new SubList();
         try {
             lecteurAvecBuffer = new BufferedReader(new FileReader(path));
