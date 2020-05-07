@@ -88,9 +88,11 @@ public class ListBuilderStd implements ListBuilder {
     	
     	if(depthList > 0) {
     		subListsMedias.get(depthList-1).add(s);
+    		type = MediaType.Sublist;
     	}
     	else {
     		this.playlist.addFile(s);
+    		type = MediaType.Nothing;
     	}
     	
 

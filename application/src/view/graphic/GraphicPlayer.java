@@ -1,8 +1,11 @@
 package view.graphic;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,7 +13,17 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
+import model.list.Playlist;
+
 public class GraphicPlayer {
+	
+	private final String PATH_PLAY_BUTTON = "../../images/play.png";
+	private final String PATH_PAUSE_BUTTON = "../../images/pause.png";
+	private final String PATH_NEXT_BUTTON = "../../images/next.png";
+	private final String PATH_PREVIOUS_BUTTON = "../../images/previous.png";
+	private final String PATH_NEXT_LIST_BUTTON = "../../images/nextList.png";
+	private final String PATH_PREVIOUS_LIST_BUTTON = "../../images/previousList.png";
+	
 	
 	// ATTRIBUTS
 	private JFrame mainFrame;
@@ -28,6 +41,7 @@ public class GraphicPlayer {
 	private JButton nextList;
 	private JButton previousList;
 	
+	private Playlist model;
 	
 	// CONSTRUCTEURS
 	public GraphicPlayer() {
@@ -48,10 +62,7 @@ public class GraphicPlayer {
 	}
 	
 	private void createModel() {
-        /*model = new StdDrinksMachineModel();
-        for (CoinTypes c : CoinTypes.values()) {
-    		model.fillCash(c, IGNITION);
-        }*/
+        model = new Playlist();
     }
 	
 	private void createView() {
@@ -64,7 +75,7 @@ public class GraphicPlayer {
     	progressBar = new JProgressBar(0,95);
     	progressBar.setEnabled(false);
     	
-        play = new JButton("Play");
+        play = new JButton("play");
     	pause = new JButton("Pause");
     	next = new JButton("Next");
     	previous = new JButton("Previous");
@@ -78,16 +89,24 @@ public class GraphicPlayer {
 		 JPanel p = new JPanel(new GridLayout(3, 1)); {
 			 
 			 //zone d’affichage des informations du fichier en cours de lecture
-			 JPanel q = new JPanel(); {
+			 JPanel q = new JPanel(new FlowLayout(FlowLayout.CENTER)); {
 				 q.add(infosCurrentFile);
 			 }
 			 p.add(q);
 			 
 			 //zone affichant la progression de la lecture
 			 q = new JPanel(new GridLayout(1, 3)); {
-				 q.add(timeProgress);
+				 JPanel r = new JPanel(); {
+					 r.add(timeProgress);
+				 }
+				 q.add(r);
+				 
 				 q.add(progressBar);
-				 q.add(fullTime);
+				 
+				 r = new JPanel(); {
+					 r.add(fullTime);
+				 }
+				 q.add(r);
 			 } 
 			 p.add(q);
 			 
