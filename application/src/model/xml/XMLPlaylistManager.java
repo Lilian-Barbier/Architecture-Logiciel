@@ -37,7 +37,7 @@ public class XMLPlaylistManager extends PlaylistManager {
 		// On récupère tout les éléments à ajouter
 		XMLOutputFactory xof = XMLOutputFactory.newInstance();
 		XMLStreamWriter xsw = null;
-		try{
+		try {
 			xsw = xof.createXMLStreamWriter(new FileWriter("./saves/" + getPlaylist().getName() + ".xml"));
 			xsw.writeStartDocument();
 			xsw.writeStartElement("list");
@@ -49,17 +49,14 @@ public class XMLPlaylistManager extends PlaylistManager {
 			xsw.writeEndElement();
 			xsw.writeEndDocument();
 			xsw.flush();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.err.println("Unable to write the file: " + e.getMessage());
-		}
-		finally {
+		} finally {
 			try {
 				if (xsw != null) {
 					xsw.close();
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				System.err.println("Unable to close the file: " + e.getMessage());
 			}
 		}

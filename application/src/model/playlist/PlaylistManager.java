@@ -3,7 +3,7 @@ package model.playlist;
 import model.list.ListBuilder;
 import model.list.ListBuilderStd;
 
-public class PlaylistManager implements IPlaylistManager {
+public abstract class PlaylistManager implements IPlaylistManager {
 
     // ATTRIBUTS
 

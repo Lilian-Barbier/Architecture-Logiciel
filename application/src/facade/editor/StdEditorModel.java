@@ -14,14 +14,12 @@ public class StdEditorModel implements IEditorModel {
 
     private IPlaylistManager manager;
     private Playlist currentPlaylist;
-    private Playlist parentPlaylist;
 
     // CONSTRUCTEUR
 
     public StdEditorModel() {
-        manager = new PlaylistManager();
+        manager = new XMLPlaylistManager();
         currentPlaylist = new Playlist();
-        parentPlaylist = new Playlist();
     }
 
     // METHODES
@@ -30,9 +28,6 @@ public class StdEditorModel implements IEditorModel {
         return currentPlaylist;
     }
 
-    Playlist getParentPlaylist() {
-        return parentPlaylist;
-    }
 
     @Override
     public String getInfos() {
@@ -40,19 +35,8 @@ public class StdEditorModel implements IEditorModel {
         for (IMedia list : currentPlaylist.getPlaylist().subList(0, currentPlaylist.getPlaylist().size())) {
             duration = duration + list.getDuration();
         }
-        IMedia current = currentPlaylist.getCurrentFile();
         return "playlist name = " + currentPlaylist.getName() +
                 " total duration " + duration;
-    }
-
-    @Override
-    public void getChild() {
-
-    }
-
-    @Override
-    public void getParent() {
-
     }
 
     // COMMANDES
@@ -61,13 +45,6 @@ public class StdEditorModel implements IEditorModel {
         if (playlist == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel setCurrentPlaylist");
         }        currentPlaylist = playlist;
-    }
-
-    void setParentPlaylist(Playlist playlist) {
-        if (playlist == null) {
-            throw new AssertionError("Paramètre invalide StdEditorModel setParentPlaylist");
-        }
-        parentPlaylist = playlist;
     }
 
     @Override
@@ -129,7 +106,7 @@ public class StdEditorModel implements IEditorModel {
     @Override
     public void addList(String path) throws IOException {
         if (path == null) {
-            throw new AssertionError("Paramètre invalide StdEditorModel addFile");
+            throw new AssertionError("Paramètre invalide StdEditorModel addList");
         }
         BufferedReader lecteurAvecBuffer = null;
         String ligne;

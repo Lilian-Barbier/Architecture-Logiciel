@@ -8,8 +8,6 @@ public interface IEditorModel {
     // METHODES
 
     String getInfos();
-    void getChild();
-    void getParent();
 
     // COMMANDES
 

@@ -44,13 +44,6 @@ public class Playlist {
         return name;
     }
 
-    public IMedia getCurrentFile() {
-        if (head >= 0) {
-            return playlist.get(head);
-        }
-        return null;
-    }
-
     // COMMANDES
 
     public void setPlaylist(List<IMedia> playlist) {

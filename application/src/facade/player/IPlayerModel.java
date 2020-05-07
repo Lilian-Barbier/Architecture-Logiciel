@@ -7,8 +7,6 @@ public interface IPlayerModel {
     // METHODES
 
     String getInfos();
-    void getChild();
-    void getParent();
 
     // COMMANDES
 
@@ -18,6 +16,6 @@ public interface IPlayerModel {
     void stop() throws InterruptedException;
     void foreward() throws InterruptedException;
     void backward();
-    void nextList();
+    void nextList() throws InterruptedException;
     void previousList();
 }

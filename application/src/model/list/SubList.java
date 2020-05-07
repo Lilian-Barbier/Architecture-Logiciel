@@ -6,9 +6,11 @@ import java.util.List;
 public class SubList extends Media {
 
     // ATTRIBUTS
-    private java.util.List<IMedia> contains;
+
+    private List<IMedia> contains;
 
     // CONSTRUCTEUR
+
     public SubList(int duration, String name) {
         super(duration, name);
         this.contains = new ArrayList<IMedia>();
@@ -59,6 +61,4 @@ public class SubList extends Media {
         }
         contains.remove(list);
     }
-    
-    
 }

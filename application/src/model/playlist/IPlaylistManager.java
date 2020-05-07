@@ -11,6 +11,8 @@ public interface IPlaylistManager {
     ListBuilder getBuilder();
 
     // COMMANDES
+    void load(File f);
+    void save();
     void setPlaylist(Playlist playlist);
     void setBuilder(ListBuilder builder);
 }
