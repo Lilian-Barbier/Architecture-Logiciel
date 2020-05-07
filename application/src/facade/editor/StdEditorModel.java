@@ -1,19 +1,29 @@
 package facade.editor;
 
 import model.list.*;
+import model.playlist.IPlaylist;
 import model.playlist.IPlaylistManager;
 import model.playlist.Playlist;
 import model.playlist.PlaylistManager;
+import model.util.LoadFiles;
 import model.xml.XMLPlaylistManager;
 
 import java.io.*;
 
+@SuppressWarnings("unused")
 public class StdEditorModel implements IEditorModel {
 
     // ATTRIBUTS
 
+    /**
+     * Le manager de fichier associé au StbEditorModel
+     */
     private IPlaylistManager manager;
-    private Playlist currentPlaylist;
+
+    /**
+     * La Playlist en cours de création par le StbEditorModel
+     */
+    private IPlaylist currentPlaylist;
 
     // CONSTRUCTEUR
 
@@ -23,7 +33,7 @@ public class StdEditorModel implements IEditorModel {
 
     // METHODES
 
-    Playlist getCurrentPlaylist() {
+    IPlaylist getCurrentPlaylist() {
         return currentPlaylist;
     }
 
@@ -31,33 +41,38 @@ public class StdEditorModel implements IEditorModel {
     @Override
     public String getInfos() {
         int duration = 0;
-        for (IMedia list : currentPlaylist.getPlaylist().subList(0, currentPlaylist.getPlaylist().size())) {
+        for (IMedia list : getCurrentPlaylist().getPlaylist().subList(0, getCurrentPlaylist().getPlaylist().size())) {
             duration = duration + list.getDuration();
         }
-        return "playlist name = " + currentPlaylist.getName() +
+        return "playlist name = " + getCurrentPlaylist().getName() +
                 " total duration " + duration;
     }
 
     // COMMANDES
 
-    void setCurrentPlaylist(Playlist playlist) {
+   /*void setCurrentPlaylist(Playlist playlist) {
         if (playlist == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel setCurrentPlaylist");
         }        currentPlaylist = playlist;
-    }
+    }*/
 
     @Override
     public void create(String name) {
         if (name == null) {
-            throw new AssertionError("Paramètre invalide StdEditorModel creates");
+            throw new AssertionError("Paramètre invalide StdEditorModel create");
         }
-        currentPlaylist.setName(name);
+        getCurrentPlaylist().setName(name);
     }
 
     @Override
     public void load(File f) {
-        manager = new XMLPlaylistManager();
+        if (f == null) {
+            throw new AssertionError("Paramètre invalide StdEditorModel load");
+        }
+        String absolutePath = f.getParent() + "/";
+        manager = new XMLPlaylistManager(absolutePath);
         manager.load(f);
+        currentPlaylist = manager.getPlaylist();
     }
 
     @Override
@@ -71,19 +86,18 @@ public class StdEditorModel implements IEditorModel {
             throw new AssertionError("Paramètre invalide StdEditorModel addFile");
         }
         BufferedReader lecteurAvecBuffer = null;
-        IMedia list = new Media();
+        IMedia list = new LoadFiles().loadFile(path);
         try {
             lecteurAvecBuffer = new BufferedReader(new FileReader(path));
             list.setDuration(Integer.parseInt(lecteurAvecBuffer.readLine()));
             list.setName(lecteurAvecBuffer.readLine());
             list.setPath(path);
-        }
-        catch(FileNotFoundException exc) {
+        } catch(FileNotFoundException exc) {
             System.out.println("Erreur d'ouverture");
         } finally {
             lecteurAvecBuffer.close();
         }
-        currentPlaylist.addFile(list);
+        getCurrentPlaylist().addFile(list);
     }
 
     @Override
@@ -114,12 +128,13 @@ public class StdEditorModel implements IEditorModel {
             list.setDuration(Integer.parseInt(lecteurAvecBuffer.readLine()));
             list.setName(lecteurAvecBuffer.readLine());
             list.setPath(path);
-        }
-        catch(FileNotFoundException exc) {
+        } catch(FileNotFoundException exc) {
             System.out.println("Erreur d'ouverture");
         } finally {
-            lecteurAvecBuffer.close();
+            if (lecteurAvecBuffer != null) {
+                lecteurAvecBuffer.close();
+            }
         }
-        currentPlaylist.addFile(list);
+        getCurrentPlaylist().addFile(list);
     }
 }

@@ -30,12 +30,10 @@ public class XMLPlaylistManager extends PlaylistManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		//getBuilder().getPlaylist();
 	}
 
 	public void save() {
-		// On récupère tout les éléments à ajouter
+		// On récupère tous les éléments à ajouter
 		XMLOutputFactory xof = XMLOutputFactory.newInstance();
 		XMLStreamWriter xsw = null;
 		try {

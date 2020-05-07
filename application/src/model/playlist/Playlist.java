@@ -70,10 +70,6 @@ public class Playlist implements IPlaylist {
         this.name = name;
     }
 
-    /**
-     * Ajoute à la playlist l'ensemble de IMedia passé en paramètre
-     * @param list l'ensemble de IMedia à ajouter à la playlist
-     */
     public void addList(List<IMedia> list) {
         if (list == null) {
             throw new AssertionError("Paramètre invalide Playlist addList");
@@ -83,10 +79,6 @@ public class Playlist implements IPlaylist {
         }
     }
 
-    /**
-     * Ajoute à la playlist le IMedia passé en paramètre
-     * @param media le IMedia à ajouter à la playlist
-     */
     public void addFile(IMedia media) {
         if (media == null) {
             throw new AssertionError("Paramètre invalide Playlist addFile");

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class StdListBuilder implements IListBuilder {
 
     // ATTRIBUTS
-	private String absolutePath;
+	private final String absolutePath;
 
 	/**
 	 * La Playlist construite dans ce StdListBuilder
@@ -43,11 +43,11 @@ public class StdListBuilder implements IListBuilder {
 	private final List<String> subListsName;
     
     // CONSTRUCTEUR
+
     public StdListBuilder(Playlist playlist, String absolutePath) {
-        if (playlist == null) {
+        if (playlist == null || absolutePath == null) {
             throw new AssertionError("Paramètre invalide StdListBuilder constructeur");
         }
-
     	this.absolutePath = absolutePath;
         this.playlist = playlist;
         this.type = MediaType.Nothing;
@@ -57,6 +57,9 @@ public class StdListBuilder implements IListBuilder {
     }
 
     public StdListBuilder(String absolutePath) {
+		if (absolutePath == null) {
+			throw new AssertionError("Paramètre invalide StdListBuilder constructeur");
+		}
     	this.absolutePath = absolutePath;
         this.playlist = new Playlist();
         this.type = MediaType.Nothing;
@@ -103,7 +106,7 @@ public class StdListBuilder implements IListBuilder {
     		subListsMedias.get(depthList-1).add(s);
     		type = MediaType.Sublist;
     	} else {
-    		this.playlist.addFile(s);
+    		getPlaylist().addFile(s);
     		type = MediaType.Nothing;
     	}
 	}
@@ -138,7 +141,7 @@ public class StdListBuilder implements IListBuilder {
         	type = MediaType.Sublist;
 		//Si il est contenu dans la Media principal
 		} else {
-    		playlist.addFile(a);
+    		getPlaylist().addFile(a);
         	type = MediaType.Nothing;
     	}
     }
@@ -167,7 +170,7 @@ public class StdListBuilder implements IListBuilder {
         	type = MediaType.Sublist;
 		//Si elle est contenu dans le Media principal
     	} else {
-    		playlist.addFile(v);
+    		getPlaylist().addFile(v);
         	type = MediaType.Nothing;
     	}
     }

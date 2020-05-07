@@ -4,6 +4,11 @@ import model.list.IMedia;
 
 public interface LoadFiles {
 
-	public IMedia loadFile(String path); 
+	/**
+	 * Permet de charger le fichier et renvoie l'objet IMedia associé
+	 * @param path le chemin du fichier à charger
+	 * @return l'objet IMedia associé
+	 */
+	IMedia loadFile(String path);
 	
 }
