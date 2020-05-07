@@ -187,9 +187,9 @@ public class StdListBuilder implements IListBuilder {
     
     @Override
     public void addPath(String path) {
-    	if (path != null || this.type == MediaType.Sublist) {
+    	if (this.path != null || this.type == MediaType.Sublist) {
     		//TODO Exception
-			System.out.println("addPath : Type not valid ("+ this.type +") or path == null");
+			System.out.println("addPath : Type not valid ("+ this.type +") or path == null (" + this.path +")" );
 		}
     	this.path = path;
     }

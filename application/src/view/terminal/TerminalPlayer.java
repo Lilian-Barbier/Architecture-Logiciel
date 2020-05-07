@@ -28,19 +28,12 @@ public class TerminalPlayer implements Observer {
 	}
 
 	private void createModel(File playlistFile) {
-        model = new StdPlayerModel();
-        model.load(playlistFile);
+        model = new StdPlayerModel(playlistFile);
     }
 		
 	private void createController() {
 		
 		model.attach(this);
-		/*model.addObserver(new Observer() {
-		@Override
-			public void update(Observable o, Object arg) {
-				refresh();
-			}
-		});*/
 		
 		System.out.println("Pour une aide : " + help);
 		
@@ -100,9 +93,6 @@ public class TerminalPlayer implements Observer {
 		catch (IOException e) {
 				// Problème lors de la lecture
 				e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}  
         finally {
 			try {
@@ -164,8 +154,4 @@ public class TerminalPlayer implements Observer {
 		System.out.println(newInfos);
 	}
 	
-	
-	
-	
-
 }

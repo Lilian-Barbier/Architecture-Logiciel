@@ -1,6 +1,7 @@
 package model.playlist;
 
 import model.list.IMedia;
+import model.list.SubList;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface IPlaylist {
      * Renvoie l'ensemble des IMedia présent dans cette Playlist
      * @return this.playlist
      */
-    List<IMedia> getPlaylist();
+    SubList getPlaylist();
 
     /**
      * Renvoie le nom de la Playlist
@@ -24,7 +25,7 @@ public interface IPlaylist {
      * Modifie l'attribut playlist avec celui passé en paramètre
      * @param playlist la nouvelle Playlist souhaitée
      */
-    void setPlaylist(List<IMedia> playlist);
+    void setPlaylist(SubList playlist);
 
     /**
      * Modifie l'attribut name avec celui passé en paramètre

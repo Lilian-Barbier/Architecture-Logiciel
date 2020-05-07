@@ -1,6 +1,7 @@
 package model.playlist;
 
 import model.list.IMedia;
+import model.list.SubList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,8 @@ public class Playlist implements IPlaylist {
     /**
      * L'ensemble des IMedia contenus dans cette Playlist
      */
-    private List<IMedia> playlist;
+	private SubList playlist;
+    //private List<IMedia> playlist;
 
     /**
      * Le nom de la Playlist
@@ -23,7 +25,8 @@ public class Playlist implements IPlaylist {
     // CONSTRUCTEUR
 
     public Playlist() {
-        playlist = new ArrayList<>();
+    	playlist = new SubList();
+        //playlist = new ArrayList<>();
         name = "new playlist";
     }
 
@@ -31,15 +34,21 @@ public class Playlist implements IPlaylist {
         if (name == null) {
             throw new AssertionError("Paramètre invalide Playlist constructeur");
         }
-        playlist = new ArrayList<>();
+        playlist = new SubList(0,name);
+        //playlist = new ArrayList<>();
         this.name = name;
     }
 
     // METHODES
 
-    public List<IMedia> getPlaylist() {
+    /*public List<IMedia> getPlaylist() {
         return playlist;
+    }*/
+    
+    public SubList getPlaylist() {
+    	return playlist;
     }
+    
 
     public String getName() {
         return name;
@@ -47,7 +56,7 @@ public class Playlist implements IPlaylist {
 
     // COMMANDES
 
-    public void setPlaylist(List<IMedia> playlist) {
+    public void setPlaylist(SubList playlist) {
         if (playlist == null) {
             throw new AssertionError("Paramètre invalide Playlist setPlaylist");
         }
@@ -69,7 +78,9 @@ public class Playlist implements IPlaylist {
         if (list == null) {
             throw new AssertionError("Paramètre invalide Playlist addList");
         }
-        this.getPlaylist().addAll(list);
+        for(IMedia m : list) {
+            this.getPlaylist().add(m);
+        }
     }
 
     /**

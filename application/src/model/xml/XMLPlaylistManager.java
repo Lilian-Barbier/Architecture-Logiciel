@@ -42,11 +42,11 @@ public class XMLPlaylistManager extends PlaylistManager {
 			xsw = xof.createXMLStreamWriter(new FileWriter("./saves/" + getPlaylist().getName() + ".xml"));
 			xsw.writeStartDocument();
 			xsw.writeStartElement("list");
-			for (IMedia l : getPlaylist().getPlaylist()) {
+			/*for (IMedia l : getPlaylist().getPlaylist()) {
 				xsw.writeStartElement("sublist");
 				xsw.writeCData(l.getPath());
 				xsw.writeEndElement();
-			}
+			}*/
 			xsw.writeEndElement();
 			xsw.writeEndDocument();
 			xsw.flush();

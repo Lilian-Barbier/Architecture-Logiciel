@@ -3,6 +3,9 @@ package view.graphic;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -13,9 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
-import model.list.Playlist;
+import facade.player.StdPlayerModel;
+import view.Observer;
+import view.terminal.TerminalPlayer;
 
-public class GraphicPlayer {
+public class GraphicPlayer implements Observer {
 	
 	private final String PATH_PLAY_BUTTON = "../../images/play.png";
 	private final String PATH_PAUSE_BUTTON = "../../images/pause.png";
@@ -36,16 +41,16 @@ public class GraphicPlayer {
 	
 	private JButton play;
 	private JButton pause;
-	private JButton next;
-	private JButton previous;
+	private JButton forward;
+	private JButton backward;
 	private JButton nextList;
 	private JButton previousList;
 	
-	private Playlist model;
+	private StdPlayerModel model;
 	
 	// CONSTRUCTEURS
-	public GraphicPlayer() {
-		createModel();
+	public GraphicPlayer(File playlistFile) {
+		createModel(playlistFile);
         createView();
         placeComponents();
         createController();
@@ -61,8 +66,8 @@ public class GraphicPlayer {
         mainFrame.setVisible(true);
 	}
 	
-	private void createModel() {
-        model = new Playlist();
+	private void createModel(File playlistFile) {
+        model = new StdPlayerModel(playlistFile);
     }
 	
 	private void createView() {
@@ -77,8 +82,8 @@ public class GraphicPlayer {
     	
         play = new JButton("play");
     	pause = new JButton("Pause");
-    	next = new JButton("Next");
-    	previous = new JButton("Previous");
+    	forward = new JButton("Next");
+    	backward = new JButton("Previous");
     	nextList = new JButton("NextList");
     	previousList = new JButton("PreviousList");
 	}
@@ -113,10 +118,10 @@ public class GraphicPlayer {
 			 //zone du panneau de commande
 			 q = new JPanel(new GridLayout(1, 6)); {
 				 q.add(previousList);
-				 q.add(previous);
+				 q.add(backward);
 				 q.add(play);
 				 q.add(pause);
-				 q.add(next);
+				 q.add(forward);
 				 q.add(nextList);
 			 } 
 			 p.add(q);
@@ -129,15 +134,49 @@ public class GraphicPlayer {
 	private void createController() {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    
-		/*model.addObserver(new Observer() {
-		@Override
-			public void update(Observable o, Object arg) {
-				refresh();
-			}
-		});
+		model.attach(this);
 		
-		... Gérer les bouton
-		*/
+        play.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		model.play();
+            }
+        });
+        
+        pause.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		model.pause();
+            }
+        });
+        
+        forward.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		model.forward();
+            }
+        });
+        
+        backward.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		model.backward();
+            }
+        });
+        
+        nextList.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		model.nextList();
+            }
+        });
+        
+        previousList.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		model.previousList();
+            }
+        });
 	}	
 
 	private void refresh() {
@@ -167,12 +206,35 @@ public class GraphicPlayer {
 	
 	// POINT D'ENTREE
 	public static void main(String[] args) {
+
+		if(args.length != 1){
+			new AssertionError("TerminalPlayer main() : Argument manquant !");
+		}
+		
+		File f = new File(args[0]);
+	
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new GraphicPlayer().display();
+				new GraphicPlayer(f).display();
 			}
 		});
+	}
+
+	@Override
+	public void updateTime(int time) {
+		timeProgress.setText("" + time);
+		progressBar.setValue(time);
+	}
+
+	@Override
+	public void updateFile(String newInfos) {
+		int duration = model.getMediaDuration();
+		progressBar.setValue(0);
+		progressBar.setMaximum(duration);
+		fullTime.setText("" + duration);
+		timeProgress.setText("" + 0);
+		infosCurrentFile.setText(newInfos);
 	}
 
 }

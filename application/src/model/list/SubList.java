@@ -23,6 +23,7 @@ public class SubList extends Media {
     public SubList() {
         this.setDuration(0);
         this.setName("new list");
+        this.contains = new ArrayList<>();
     }
     
     public SubList(List<IMedia> contains, String name) {
@@ -38,10 +39,15 @@ public class SubList extends Media {
 
     public IMedia getChild(int num) {
         if (num < 0) {
-            throw new AssertionError("Paramètre invalide SubList getChild");
+            throw new AssertionError("Paramètre invalide SubList getChild (<0)");
         }
-        IMedia[] a = (IMedia[]) contains.toArray();
-        return a[num];
+        if (num > contains.size()) {
+            throw new AssertionError("Paramètre invalide SubList getChild (>size)");
+        }
+        
+        return contains.get(num);
+        //IMedia[] a = (IMedia[]) contains.toArray();
+        //return a[num];
     }
 
     public void setContains(List<IMedia> contains) {
@@ -51,19 +57,19 @@ public class SubList extends Media {
         this.contains = contains;
     }
 
-    public void add(IMedia list) {
-        if (list == null) {
+    public void add(IMedia media) {
+        if (media == null) {
             throw new AssertionError("Paramètre invalide SubList add");
         }
-        this.setDuration(this.getDuration() + list.getDuration());
-        contains.add(list);
+        this.setDuration(this.getDuration() + media.getDuration());
+        contains.add(media);
     }
 
-    public void remove(IMedia list) {
-        if (list == null) {
+    public void remove(IMedia media) {
+        if (media == null) {
             throw new AssertionError("Paramètre invalide SubList remove");
         }
-        contains.remove(list);
+        contains.remove(media);
     }
     
 	@Override
@@ -71,4 +77,8 @@ public class SubList extends Media {
         return " SubList duration : " + getDuration() +
                 "; SubList name : " + getName();
     }
+
+	public Integer size() {
+		return contains.size();
+	}
 }
