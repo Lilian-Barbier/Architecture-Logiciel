@@ -1,6 +1,7 @@
 package model.list;
 
 import model.playlist.Playlist;
+import model.util.LoadAudio;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 public class ListBuilderStd implements ListBuilder {
 
     // ATTRIBUTS
+	private String absolutePath;
+
     private Playlist playlist;
     private MediaType type;
     
@@ -21,10 +24,12 @@ public class ListBuilderStd implements ListBuilder {
     private List<String> subListsName;
     
     // CONSTRUCTEUR
-    public ListBuilderStd(Playlist playlist) {
+    public ListBuilderStd(Playlist playlist, String absolutePath) {
         if (playlist == null) {
             throw new AssertionError("Paramètre invalide ListBuilderStd constructeur");
         }
+
+    	this.absolutePath = absolutePath;
         this.playlist = playlist;
         this.type = MediaType.Nothing;
         
@@ -33,7 +38,8 @@ public class ListBuilderStd implements ListBuilder {
         this.subListsName = new ArrayList<String>();
     }
 
-    public ListBuilderStd() {
+    public ListBuilderStd(String absolutePath) {
+    	this.absolutePath = absolutePath;
         this.playlist = new Playlist();
         this.type = MediaType.Nothing;
         
@@ -94,8 +100,6 @@ public class ListBuilderStd implements ListBuilder {
     		this.playlist.addFile(s);
     		type = MediaType.Nothing;
     	}
-
-
 	}
 
     @Override
@@ -121,7 +125,7 @@ public class ListBuilderStd implements ListBuilder {
     		System.out.println("StopAudio : Path Null");
     	}
     	
-    	Audio a = new Audio(path);
+    	IMedia a = new LoadAudio().loadFile(absolutePath + path);
     	
     	//Si cet audio est contenus dans une sous-liste
     	if(depthList > 0) {

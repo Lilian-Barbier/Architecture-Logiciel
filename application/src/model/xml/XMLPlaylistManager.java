@@ -15,9 +15,11 @@ import java.io.FileWriter;
 public class XMLPlaylistManager extends PlaylistManager {
 
 	// CONSTRUCTEUR
-
-	public XMLPlaylistManager() {}
-
+	
+	public XMLPlaylistManager(String absolutePath) {
+		super(absolutePath);
+	}
+	
 	// COMMANDES
 
 	public void load(File f) {
@@ -30,7 +32,8 @@ public class XMLPlaylistManager extends PlaylistManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		getBuilder().getPlaylist();
+		
+		//getBuilder().getPlaylist();
 	}
 
 	public void save() {
@@ -64,7 +67,9 @@ public class XMLPlaylistManager extends PlaylistManager {
 
     public static void main(String argv[]) {
     	File f = new File("/home/barbier/Documents/TP-Master/ArchiLogicielle/Projet/ArchiLogiciel/compilation/playlist.xpl");
-    	XMLPlaylistManager loader = new XMLPlaylistManager();
+    	
+    	String absolutePath = f.getParent() + "/";    	
+    	XMLPlaylistManager loader = new XMLPlaylistManager(absolutePath);
 
 		loader.load(f);
     }

@@ -2,6 +2,8 @@ package view;
 
 public interface Observer {
 
-	public void updatePlayerTime(int time);
+	public void updateTime(int time);
+
+	public void updateFile(String newInfos);
 	
 }

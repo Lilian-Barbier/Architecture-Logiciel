@@ -21,9 +21,16 @@ public abstract class PlayerObserver implements IPlayerObserver{
 		observers.remove(o);
 	}
 	
-	public void notifyObserversTimeChange(int time) {
+	public void notifyObserversTime(int time) {
 		for(Observer o : observers) {
-			o.updatePlayerTime(time);
+			o.updateTime(time);
 		}
 	}
+	
+	public void notifyObserversFile(String newInfos) {
+		for(Observer o : observers) {
+			o.updateFile(newInfos);
+		}
+	}
+	
 }

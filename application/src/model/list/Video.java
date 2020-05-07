@@ -34,4 +34,11 @@ public class Video extends Media {
         }
         this.resolution = resolution;
     }
+    
+	@Override
+	public String getInfos() {
+        return " Video duration : " + getDuration() +
+                "; Video name : " + getName() +
+                "; Video Artist : " + getResolution();
+    }
 }

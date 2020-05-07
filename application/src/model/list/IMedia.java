@@ -13,4 +13,6 @@ public interface IMedia {
     void setDuration(int duration);
     void setName(String name);
     void setPath(String path);
+    
+    String getInfos();
 }

@@ -61,4 +61,10 @@ public class SubList extends Media {
         }
         contains.remove(list);
     }
+    
+	@Override
+	public String getInfos() {
+        return " SubList duration : " + getDuration() +
+                "; SubList name : " + getName();
+    }
 }

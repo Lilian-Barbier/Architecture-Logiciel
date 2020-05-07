@@ -18,7 +18,6 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
     private XMLPlaylistManager manager;
     private Playlist currentPlaylist;
     private int headDuration;
-    private Thread chrono;
     private Map<Integer, Integer> map;
     private int depth;
     
@@ -27,10 +26,8 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
     // CONSTRUCTEUR
 
     public StdPlayerModel() {
-        manager = new XMLPlaylistManager();
         currentPlaylist = new Playlist();
         headDuration = 0;
-        chrono = new Thread();
         map = new TreeMap<>();
         map.put(0,0);
         depth = 0;
@@ -62,10 +59,8 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
             duration = duration + list.getDuration();
         }
         IMedia current = getCurrentFile();
-        return "playlist name = " + currentPlaylist.getName() +
-                " total duration " + duration +
-                " current file name " + current.getName() +
-                " current file duration " + current.getDuration();
+        return "Playlist name : " + currentPlaylist.getName() +
+                "; Total duration : " + duration + "; " + current.getInfos();
     }
 
     // COMMANDES
@@ -94,45 +89,36 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
     @Override
     public void load(File f) {
+		String absolutePath = f.getParent() + "/";  
+        manager = new XMLPlaylistManager(absolutePath);
         manager.load(f);
+        currentPlaylist = manager.getPlaylist();
     }
 
     @Override
     public void play() throws InterruptedException {
-        /*chrono.notify();
-        while (headDuration <= getCurrentFile().getDuration()) {
-            chrono.sleep(999);
-            incrementHeadDuration();
-        }
-        if (headDuration == getCurrentFile().getDuration()) {
-            if (currentPlaylist.getHead() == currentPlaylist.getPlaylist().size() - 1) {
-                stop();
-            }
-            foreward();
-        }*/
-    	
+
+    	timer = new Timer();
     	timer.schedule(new playFileTask(), 0, 1000);
 
     }
 
     @Override
     public void pause() throws InterruptedException {
-        //chrono.wait();
     	timer.cancel();
-    	timer = new Timer();
     }
 
     @Override
-    public synchronized void stop() throws InterruptedException {
+    public void stop() {
         headDuration = 0;
         map = new TreeMap<>();
         map.put(0,0);
         depth = 0;
-        chrono.wait();
+        timer.cancel();
     }
 
     @Override
-    public synchronized void foreward() throws InterruptedException {
+    public synchronized void forward() {
         IMedia currentMedia = getCurrentFile();
         SubList parentMedia = getParentCurrentFile();
         // FICHIER COURANT EST UNE SOUS LISTE
@@ -168,6 +154,9 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
                 }
             }
         }
+
+        headDuration = 0;
+        notifyObserversFile(getCurrentFile().getInfos());
     }
 
     @Override
@@ -260,14 +249,14 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
     public void incrementHeadDuration() {
         headDuration = headDuration + 1;
-        notifyObserversTimeChange(headDuration);
+        notifyObserversTime(headDuration);
        
-        /*if (headDuration == getCurrentFile().getDuration()) {
+        if (headDuration == getCurrentFile().getDuration()) {
             if (currentPlaylist.getHead() == currentPlaylist.getPlaylist().size() - 1) {
                 stop();
             }
-            foreward();
-        }*/
+            forward();
+        }
         
     }
 
@@ -281,6 +270,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 		}
     	
 	}
+
 }
 
 

@@ -12,6 +12,7 @@ public class TerminalPlayer implements Observer {
 	
 	private final String play = "play";
 	private final String pause = "pause";
+	private final String stop = "stop";
 	private final String forward = "forward";
 	private final String backward = "backward";
 	private final String nextList = "nextList";
@@ -58,8 +59,12 @@ public class TerminalPlayer implements Observer {
 					model.pause();
 					break;
 					
+				case stop:
+					model.stop();
+					break;
+					
 				case forward:
-					model.foreward();
+					model.forward();
 					break;
 					
 				case backward:
@@ -147,9 +152,20 @@ public class TerminalPlayer implements Observer {
 		new TerminalPlayer(f);
 	}
 
+
 	@Override
-	public void updatePlayerTime(int time) {
+	public void updateTime(int time) {
 		System.out.println(time);
 	}
+
+	//appelle mise à jour temps, quand on change de fichier
+	@Override
+	public void updateFile(String newInfos) {
+		System.out.println(newInfos);
+	}
+	
+	
+	
+	
 
 }

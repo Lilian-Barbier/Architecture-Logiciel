@@ -1,7 +1,5 @@
 package facade.player;
 
-import java.util.ArrayList;
-
 import view.Observer;
 
 public interface IPlayerObserver {
@@ -10,6 +8,7 @@ public interface IPlayerObserver {
 	
 	public void dettach(Observer o);
 	
-	public void notifyObserversTimeChange(int time);
+	public void notifyObserversTime(int time);
 	
+	public void notifyObserversFile(String newInfos);
 }

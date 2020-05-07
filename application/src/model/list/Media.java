@@ -1,6 +1,6 @@
 package model.list;
 
-public class Media implements IMedia {
+public abstract class Media implements IMedia {
 
     // ATTRIBUTS
 

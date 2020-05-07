@@ -6,27 +6,23 @@ import model.list.ListBuilderStd;
 public abstract class PlaylistManager implements IPlaylistManager {
 
     // ATTRIBUTS
-
-    private Playlist playlist;
     private ListBuilder builder;
 
     // CONSTRUCTEUR
 
-    public PlaylistManager() {
-        playlist = new Playlist();
-        builder = new ListBuilderStd();
+    public PlaylistManager(String absolutePath) {
+        builder = new ListBuilderStd(absolutePath);
     }
 
-    public PlaylistManager(String name) {
-        playlist = new Playlist(name);
-        builder = new ListBuilderStd();
+    public PlaylistManager(String name, String absolutePath) {
+        builder = new ListBuilderStd(absolutePath);
     }
 
     // METHODES
 
     @Override
     public Playlist getPlaylist() {
-        return playlist;
+        return builder.getPlaylist();
     }
 
     @Override
@@ -36,13 +32,13 @@ public abstract class PlaylistManager implements IPlaylistManager {
 
     // COMMANDES
 
-    @Override
+    /*@Override
     public void setPlaylist(Playlist playlist) {
         if (playlist == null) {
             throw new AssertionError("Paramètre invalide PlaylistManager setPlaylist");
         }
-        this.playlist = playlist;
-    }
+        builder. TODO RAJOUTER UN SETPLAYLIS
+    }*/
 
     @Override
     public void setBuilder(ListBuilder builder) {

@@ -14,7 +14,7 @@ public interface IPlayerModel {
     void play() throws InterruptedException;
     void pause() throws InterruptedException;
     void stop() throws InterruptedException;
-    void foreward() throws InterruptedException;
+    void forward() throws InterruptedException;
     void backward();
     void nextList() throws InterruptedException;
     void previousList();

@@ -34,4 +34,12 @@ public class Audio extends Media {
         }
         this.artist = artist;
     }
+
+	@Override
+	public String getInfos() {
+        return " Audio duration : " + getDuration() +
+                "; Audio name : " + getName() +
+                "; Audio Artist : " + getArtist();
+    }
+	
 }
