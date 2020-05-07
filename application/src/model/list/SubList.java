@@ -3,17 +3,21 @@ package model.list;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class SubList extends Media {
 
     // ATTRIBUTS
 
+    /**
+     * L'ensemble des IMedia contenu dans la SubList
+     */
     private List<IMedia> contains;
 
     // CONSTRUCTEUR
 
     public SubList(int duration, String name) {
         super(duration, name);
-        this.contains = new ArrayList<IMedia>();
+        this.contains = new ArrayList<>();
     }
 
     public SubList() {

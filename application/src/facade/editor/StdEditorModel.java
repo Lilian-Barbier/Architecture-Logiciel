@@ -71,7 +71,6 @@ public class StdEditorModel implements IEditorModel {
             throw new AssertionError("Paramètre invalide StdEditorModel addFile");
         }
         BufferedReader lecteurAvecBuffer = null;
-        String ligne;
         IMedia list = new Media();
         try {
             lecteurAvecBuffer = new BufferedReader(new FileReader(path));
@@ -109,7 +108,6 @@ public class StdEditorModel implements IEditorModel {
             throw new AssertionError("Paramètre invalide StdEditorModel addList");
         }
         BufferedReader lecteurAvecBuffer = null;
-        String ligne;
         IMedia list = new SubList();
         try {
             lecteurAvecBuffer = new BufferedReader(new FileReader(path));

@@ -1,8 +1,6 @@
 package model.xml;
 
 import model.list.*;
-import model.playlist.IPlaylistManager;
-import model.playlist.Playlist;
 import model.playlist.PlaylistManager;
 
 import javax.xml.parsers.SAXParser;
@@ -25,7 +23,7 @@ public class XMLPlaylistManager extends PlaylistManager {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 
-			XplPlaylistHandler handler = new XplPlaylistHandler(getBuilder());
+			XPLPlaylistHandler handler = new XPLPlaylistHandler(getBuilder());
 			saxParser.parse(f, handler);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -62,10 +60,11 @@ public class XMLPlaylistManager extends PlaylistManager {
 		}
 	}
 
-    public static void main(String argv[]) {
+	// JEU DE TEST
+    /*public static void main(String argv[]) {
     	File f = new File("/home/barbier/Documents/TP-Master/ArchiLogicielle/Projet/ArchiLogiciel/compilation/playlist.xpl");
     	XMLPlaylistManager loader = new XMLPlaylistManager();
 
 		loader.load(f);
-    }
+    }*/
 }

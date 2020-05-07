@@ -4,8 +4,19 @@ public class Media implements IMedia {
 
     // ATTRIBUTS
 
+    /**
+     * La durée du Media
+     */
     private int duration;
+
+    /**
+     * Le nom du fichier du Media
+     */
     private String name;
+
+    /**
+     * Le chemin du fichier du Media
+     */
     private String path;
 
     // CONSTRUCTEUR
@@ -18,13 +29,13 @@ public class Media implements IMedia {
         this.name = name;
     }
 
-    public Media() {
+    public Media(String path) {
+    	this.path = path;
         this.duration = 0;
         this.name = "new list";
     }
-    
-    public Media(String path) {
-    	this.path = path;
+
+    public Media() {
         this.duration = 0;
         this.name = "new list";
     }
@@ -43,6 +54,11 @@ public class Media implements IMedia {
 
     @Override
     public String getPath() { return path; }
+
+    @Override
+    public String getInfos() {
+        return "duration : " + getDuration() + " name : " + getName() + " path : " + getPath();
+    }
 
     // COMMANDES
 

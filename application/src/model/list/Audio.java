@@ -1,9 +1,12 @@
 package model.list;
 
+@SuppressWarnings("unused")
 public class Audio extends Media {
 
     // ATTRIBUTS
-
+    /**
+     * L'artiste du fichier Audio
+     */
     private String artist;
 
     // CONSTRUCTEUR
@@ -21,13 +24,19 @@ public class Audio extends Media {
     }
 
     // METHODES
-
+    /**
+     * Renvoie l'attribut artist
+     * @return this.artist
+     */
     public String getArtist() {
         return artist;
     }
 
     // COMMANDES
-
+    /**
+     * Modifie l'attribut artiste avec celui passé en paramètre
+     * @param artist le nouvel artiste souhaité
+     */
     public void setArtist(String artist) {
         if (artist == null) {
             throw new AssertionError("Paramètre invalide Audio setArtist");

@@ -1,36 +1,43 @@
 package model.playlist;
 
-import model.list.ListBuilder;
-import model.list.ListBuilderStd;
+import model.list.IListBuilder;
+import model.list.StdListBuilder;
 
+@SuppressWarnings("unused")
 public abstract class PlaylistManager implements IPlaylistManager {
 
     // ATTRIBUTS
-
+    /**
+     * La playlist qui est managée
+     */
     private Playlist playlist;
-    private ListBuilder builder;
+
+    /**
+     * Le builder construisant la playlist
+     */
+    private IListBuilder builder;
 
     // CONSTRUCTEUR
 
     public PlaylistManager() {
         playlist = new Playlist();
-        builder = new ListBuilderStd();
+        builder = new StdListBuilder();
     }
 
     public PlaylistManager(String name) {
         playlist = new Playlist(name);
-        builder = new ListBuilderStd();
+        builder = new StdListBuilder();
     }
 
     // METHODES
 
     @Override
     public Playlist getPlaylist() {
-        return playlist;
+        return builder.getPlaylist();
     }
 
     @Override
-    public ListBuilder getBuilder() {
+    public IListBuilder getBuilder() {
         return builder;
     }
 
@@ -45,7 +52,7 @@ public abstract class PlaylistManager implements IPlaylistManager {
     }
 
     @Override
-    public void setBuilder(ListBuilder builder) {
+    public void setBuilder(IListBuilder builder) {
         if (builder == null) {
             throw new AssertionError("Paramètre invalide PlaylistManager setBuilder");
         }
