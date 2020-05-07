@@ -94,7 +94,6 @@ public class ListBuilderStd implements ListBuilder {
     		this.playlist.addFile(s);
     		type = MediaType.Nothing;
     	}
-		s.setDepth(depthList);
 
 
 	}

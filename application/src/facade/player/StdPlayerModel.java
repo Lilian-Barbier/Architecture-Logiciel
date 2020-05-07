@@ -2,27 +2,27 @@ package facade.player;
 
 import model.list.IMedia;
 import model.list.SubList;
-import model.playlist.IPlaylistManager;
 import model.playlist.Playlist;
-import model.playlist.PlaylistManager;
 import model.xml.XMLPlaylistManager;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
 
-public class StdPlayerModel implements  IPlayerModel {
+public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
     // ATTRIBUTS
 
-    private PlaylistManager manager;
+    private XMLPlaylistManager manager;
     private Playlist currentPlaylist;
     private int headDuration;
     private Thread chrono;
     private Map<Integer, Integer> map;
     private int depth;
+    
+    private Timer timer;
 
     // CONSTRUCTEUR
 
@@ -34,6 +34,8 @@ public class StdPlayerModel implements  IPlayerModel {
         map = new TreeMap<>();
         map.put(0,0);
         depth = 0;
+        
+        timer = new Timer();
     }
 
     // METHODES
@@ -97,7 +99,7 @@ public class StdPlayerModel implements  IPlayerModel {
 
     @Override
     public void play() throws InterruptedException {
-        chrono.notify();
+        /*chrono.notify();
         while (headDuration <= getCurrentFile().getDuration()) {
             chrono.sleep(999);
             incrementHeadDuration();
@@ -107,12 +109,17 @@ public class StdPlayerModel implements  IPlayerModel {
                 stop();
             }
             foreward();
-        }
+        }*/
+    	
+    	timer.schedule(new playFileTask(), 0, 1000);
+
     }
 
     @Override
-    public synchronized void pause() throws InterruptedException {
-        chrono.wait();
+    public void pause() throws InterruptedException {
+        //chrono.wait();
+    	timer.cancel();
+    	timer = new Timer();
     }
 
     @Override
@@ -253,5 +260,27 @@ public class StdPlayerModel implements  IPlayerModel {
 
     public void incrementHeadDuration() {
         headDuration = headDuration + 1;
+        notifyObserversTimeChange(headDuration);
+       
+        /*if (headDuration == getCurrentFile().getDuration()) {
+            if (currentPlaylist.getHead() == currentPlaylist.getPlaylist().size() - 1) {
+                stop();
+            }
+            foreward();
+        }*/
+        
     }
+
+    /*CLASSES INTERNE*/
+    public class playFileTask extends TimerTask {
+		
+    	@Override
+		public void run() {
+			//System.out.println(new Date() + " Execution de ma tache");
+			incrementHeadDuration();
+		}
+    	
+	}
 }
+
+
