@@ -40,7 +40,7 @@ public class SubList extends Media {
         if (num < 0) {
             throw new AssertionError("Paramètre invalide SubList getChild");
         }
-        IMedia[] a = (IMedia[]) contains.toArray();
+        IMedia[] a = (IMedia[]) getContains().toArray();
         return a[num];
     }
 
@@ -56,14 +56,14 @@ public class SubList extends Media {
             throw new AssertionError("Paramètre invalide SubList add");
         }
         this.setDuration(this.getDuration() + list.getDuration());
-        contains.add(list);
+        getContains().add(list);
     }
 
     public void remove(IMedia list) {
         if (list == null) {
             throw new AssertionError("Paramètre invalide SubList remove");
         }
-        contains.remove(list);
+        getContains().remove(list);
     }
     
 	@Override
