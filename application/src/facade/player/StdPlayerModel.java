@@ -17,6 +17,9 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
     // ATTRIBUTS
 
+	/**
+	 * Manager de playlist XML : load / Save
+	 */
     private XMLPlaylistManager manager;
     
     /**
@@ -34,12 +37,14 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
      */
     private Map<Integer, Integer> headPositions;
     
-    
     /**
      * Profondeur de la tête de lecture.
      */
     private int depth;
     
+    /**
+     * Timer utilisé pour simulé la lecture des fichiers.
+     */
     private Timer timer;
 
    

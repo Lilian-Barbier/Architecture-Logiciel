@@ -9,32 +9,52 @@ import model.util.LoadFiles;
 import model.xml.XMLPlaylistManager;
 
 import java.io.*;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 public class StdEditorModel implements IEditorModel {
 
     // ATTRIBUTS
+    
 
+    
     /**
      * Le manager de fichier associé au StbEditorModel
      */
     private IPlaylistManager manager;
 
     /**
-     * La Playlist en cours de création par le StbEditorModel
+     * L'objet Playlist est la racine de notre playlist.
      */
-    private IPlaylist currentPlaylist;
+    private Playlist rootPlaylist;
+    
+    /**
+     * Temps écoulé sur le fichier en cours.
+     */
+    private int currentTime;
+    
+    /**
+     * On associe pour chaque profondeur parcourus un indice indiquant le media courant.
+     */
+    private Map<Integer, Integer> headPositions;
+    
+    /**
+     * Profondeur de la tête de lecture.
+     */
+    private int depth;
+    
+    
 
     // CONSTRUCTEUR
 
     public StdEditorModel() {
-        currentPlaylist = new Playlist();
+    	rootPlaylist = new Playlist();
     }
 
     // METHODES
 
     IPlaylist getCurrentPlaylist() {
-        return currentPlaylist;
+        return rootPlaylist;
     }
 
 
@@ -137,4 +157,14 @@ public class StdEditorModel implements IEditorModel {
         }
         getCurrentPlaylist().addFile(list);
     }
+
+	public void enterList() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void ascendList() {
+		// TODO Auto-generated method stub
+		
+	}
 }
