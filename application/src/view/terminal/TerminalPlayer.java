@@ -122,9 +122,9 @@ public class TerminalPlayer implements Observer {
 	     changeOutput.setText("" + model.getChangeAmount());
 	     for (final JButton b : buttonToDrinkRelation.keySet()) {
 	    	 if (model.getDrinkNb(buttonToDrinkRelation.get(b)) == 0) {
-	    		 b.setEnabled(false);
+	  s  		 b.setEnabled(false);
 	    	 } else {
-	    		 b.setEnabled(true);
+	    		 b.setEnabled(tprue);
 	    	 }
 	     }*/
 	}
@@ -145,7 +145,7 @@ public class TerminalPlayer implements Observer {
 
 	@Override
 	public void updateTime(int time) {
-		System.out.println(time);
+		System.out.print(time + "/" + model.getMediaDuration() + "\r");
 	}
 
 	//appelle mise à jour temps, quand on change de fichier

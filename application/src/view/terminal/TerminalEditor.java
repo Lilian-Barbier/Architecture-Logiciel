@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import facade.editor.StdEditorModel;
 
 public class TerminalEditor {
-	
+
 	private final String createList = "create";
 	private final String loadList = "load";
 	private final String saveList = "save";
@@ -19,9 +19,9 @@ public class TerminalEditor {
 	private final String importFiles = "importFiles";
 	private final String importList = "importXPL";
 	private final String help = "help";
-	
+
 	private StdEditorModel model;
-	
+
 	// CONSTRUCTEURS
 	public TerminalEditor() {
 		createModel();
@@ -31,55 +31,55 @@ public class TerminalEditor {
 	private void createModel() {
         model = new StdEditorModel();
     }
-		
+
 	private void createController() {
-		
+
 		System.out.println("Pour une aide : " + help);
-		
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
         	String line = reader.readLine();
 			//while(line != null && model.isFinish()) {
         	while(line != null) {
-				
+
         		switch (line.split(" ")[0]) {
 					case createList:
 						model.create(line.split(" ")[1]);
 						break;
-	
+
 					case loadList:
 						File f = new File(line.split(" ")[1]);
 						model.load(f);;
 						break;
-						
+
 					case saveList:
 						model.save();
 						break;
-						
+
 					case showInfos:
 						model.getInfos();
 						break;
-						
+
 					case enterList:
 						model.enterList();
 						break;
-						
+
 					case ascendList:
 						model.ascendList();
 						break;
-						
+
 					case importFile:
 						model.addFile(line.split(" ")[1]);
 						break;
-						
+
 					case importFiles:
 						model.addFilesFromFolder(line.split(" ")[1]);
 						break;
-						
+
 					case importList:
 						model.addList(line.split(" ")[1]);
 						break;
-						
+
 					case help:
 						System.out.println(createList + " : .");
 						System.out.println(loadList + " : .");
@@ -91,20 +91,20 @@ public class TerminalEditor {
 						System.out.println(importFiles + " : .");
 						System.out.println(importList + " : .");
 						break;
-						
+
 					default:
 						System.out.println(line + " : commande introuvable.");
 						System.out.println("Pour une aide : " + help);
 						break;
 				}
-        		
+
 				line = reader.readLine();
-			} 
+			}
         }
 		catch (IOException e) {
 				// Problème lors de la lecture
 				e.printStackTrace();
-		}  
+		}
         finally {
 			try {
 				reader.close();
@@ -113,11 +113,10 @@ public class TerminalEditor {
 				e.printStackTrace();
 			}
 		}
-	
-	}	
+
+	}
 
 	private void refresh() {
-		 /*
 		 if (model.canGetChange()) {
 			 changeInfo.setText("Cet appareil rend la monnaie");
 		 } else {
@@ -137,19 +136,20 @@ public class TerminalEditor {
 	    	 } else {
 	    		 b.setEnabled(true);
 	    	 }
-	     }*/
+	     }
+
 	}
-	
-	
+
+
 	// POINT D'ENTREE
 	public static void main(String[] args) {
-		
+
 		if(args.length != 1){
 			new AssertionError("TerminalPlayer main() : Argument manquant !");
 		}
-		
+
 		File f = new File(args[0]);
-		
+
 		new TerminalPlayer(f);
 	}
 

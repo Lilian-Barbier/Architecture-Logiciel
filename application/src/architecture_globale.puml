@@ -1,0 +1,229 @@
+@startuml
+package model {
+    package list {
+        interface IMedia {
+            int getDuration()
+            String getName()
+            String getPath()
+            String getInfos()
+            void setDuration(int duration)
+            void setName(String name)
+            void setPath(String path)
+        }
+        abstract class Media implements IMedia {
+            private int duration
+            private String name
+            private String path
+        }
+        class Audio extends Media {
+            private String artist
+            public String getArtist()
+            public void setArtist(String artist)
+        }
+        class Video extends Media {
+            private String resolution
+            public String getResolution()
+            public void setResolution(String resolution)
+        }
+        class SubList extends Media {
+            public List<IMedia> getContains()
+            public IMedia getChild(int num)
+            public void setContains(List<IMedia> contains)
+            public void add(IMedia list)
+            public void remove(IMedia list)
+        }
+        SubList o--> "0..*" IMedia : contains
+        enum MediaType {
+            Nothing,
+            Audio,
+            Video,
+            Sublist
+        }
+        interface IListBuilder {
+            Playlist getPlaylist()
+            void startSublist()
+            void stopSublist()
+            void startAudio()
+            void stopAudio()
+            void startVideo()
+            void stopVideo()
+            void addName(String name)
+            void addPath(String path)
+        }
+        class StdListBuilder implements IListBuilder {
+            private final String absolutePath
+            private String path
+            private int depthList
+            private final List<String> subListsName
+        }
+        StdListBuilder ..> Playlist : playlist
+        StdListBuilder ..> MediaType : type
+        StdListBuilder ..> "0..*" IMedia : subListMedias
+    }
+    package playlist {
+        interface IPlaylist {
+            SubList getPlaylist()
+            String getName()
+            void setPlaylist(SubList playlist)
+            void setName(String name)
+            void addList(List<IMedia> list)
+            void addFile(IMedia media)
+        }
+        class Playlist implements IPlaylist {
+            private String name
+        }
+        Playlist ..> "0..*" SubList : playlist
+
+        interface IPlaylistManager {
+            Playlist getPlaylist()
+            IListBuilder getBuilder()
+            void load(File f)
+            void save()
+            void setPlaylist(Playlist playlist)
+            void setBuilder(IListBuilder builder)
+        }
+        abstract class PlaylistManager implements IPlaylistManager {
+        }
+        PlaylistManager ..> IListBuilder : builder
+    }
+    package util {
+        interface LoadFiles {
+            IMedia loadFile(String path)
+        }
+        class LoadAudio implements LoadFiles {
+        }
+        class LoadVideo implements LoadFiles {
+        }
+    }
+    package xml {
+        class XMLPlaylistManager extends PlaylistManager {
+    	}
+    	class XPLPlaylistHandler extends DefaultHandler {
+            int sublist
+            boolean audio
+            boolean video
+            public void startElement(String uri, String localName, String qName, Attributes attributes)
+        	public void endElement(String uri, String localName, String qName)
+        	public void characters(char[] data, int start, int length)
+        }
+        XMLPlaylistManager ..> IListBuilder : builder
+    }
+}
+package facade {
+     package editor {
+            interface IEditorModel {
+                String getInfos()
+                void create(String name)
+                void load(File f)
+                void save()
+                void addFile(String path) throws IOException
+                void addFilesFromFolder(String path) throws IOException
+                void addList(String path) throws IOException
+            }
+            class StdEditorModel implements IEditorModel {
+                IPlaylist getCurrentPlaylist()
+                public void setCurrentPlaylist(Playlist playlist)
+                public void enterList()
+                public void ascendList()
+            }
+            StdEditorModel ..> IPlaylistManager : manager
+            StdEditorModel ..> IPlaylist : currentPlaylist
+     }
+     package player {
+        interface IPlayerModel {
+            String getInfos()
+            void load(File f)
+            void play() throws InterruptedException
+            void pause() throws InterruptedException
+            void stop() throws InterruptedException
+            void forward() throws InterruptedException
+            void backward()
+            void nextList() throws InterruptedException
+            void previousList()
+        }
+
+        interface IPlayerObserver {
+            void attach(Observer o)
+            void dettach(Observer o)
+            void notifyObserversTime(int time)
+            void notifyObserversFile(String newInfos)
+        }
+
+        abstract class PlayerObserver implements IPlayerObserver {
+        }
+        PlayerObserver ..> "0..*" Observer : observers
+
+        class StdPlayerModel extends PlayerObserver implements IPlayerModel {
+            private int headDuration
+            private Map<Integer, Integer> map
+            private int depth
+            public class playFileTask extends TimerTask
+            public Playlist getRootPlaylist()
+            public int getCurrentTime()
+            public int getMediaDuration()
+            public int getDepth()
+            public void setRootPlaylist(Playlist playlist)
+            public void setCurrentTime(int time)
+            public void incrementDepth()
+            public void decrementDepth()
+            public IMedia getCurrentFile()
+            public SubList getParentCurrentFile()
+            public void incrementHeadDuration()
+        }
+        StdPlayerModel ..> XMLPlaylistManager : manager
+        StdPlayerModel ..> Playlist : currentPlaylist
+        StdPlayerModel ..> Playlist : rootPlaylist
+        StdPlayerModel ..> XMLPlaylistManager : manager
+        StdPlayerModel ..> Timer : timer
+    }
+}
+package view {
+    package graphic {
+        class GraphicPlayer {
+        	public void display()
+        	private void createModel()
+        	private void createView()
+        	private void placeComponents()
+        	private void createController()
+        	private void refresh()
+        	public static void main(String[] args)
+        	public void updateTime(int time)
+            public void updateFile(String newInfos)
+        }
+        GraphicPlayer ..> JFrame : mainFrame
+        GraphicPlayer ..> JLabel : infosCurrentFile
+        GraphicPlayer ..> JLabel : timeProgress
+        GraphicPlayer ..> JLabel : fullTime
+        GraphicPlayer ..> JProgressBar : progressBar
+        GraphicPlayer ..> JButton : play
+        GraphicPlayer ..> JButton : pasue
+        GraphicPlayer ..> JButton : next
+        GraphicPlayer ..> JButton : previous
+        GraphicPlayer ..> JButton : nextList
+        GraphicPlayer ..> JButton : previousList
+        GraphicPlayer ..> Playlist : model
+    }
+    package terminal {
+        class TerminalEditor {
+        	private void createModel()
+        	private void createController()
+        	private void refresh()
+        	public static void main(String[] args)
+        }
+        TerminalEditor ..> StdEditorModel : model
+        class TerminalPlayer implements Observer {
+        	private void createModel(File playlistFile)
+        	private void createController()
+        	private void refresh()
+        	public void updateTime(int time)
+        	public void updateFile(String newInfos)
+        	public static void main(String[] args)
+        }
+        TerminalPlayer ..> StdPlayerModel : model
+    }
+    interface Observer {
+    	public void updateTime(int time)
+    	public void updateFile(String newInfos)
+    }
+}
+@enduml

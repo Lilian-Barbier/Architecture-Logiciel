@@ -15,9 +15,7 @@ import java.util.Map;
 public class StdEditorModel implements IEditorModel {
 
     // ATTRIBUTS
-    
 
-    
     /**
      * Le manager de fichier associé au StbEditorModel
      */
@@ -26,24 +24,22 @@ public class StdEditorModel implements IEditorModel {
     /**
      * L'objet Playlist est la racine de notre playlist.
      */
+
     private Playlist rootPlaylist;
-    
     /**
      * Temps écoulé sur le fichier en cours.
      */
     private int currentTime;
-    
+
     /**
      * On associe pour chaque profondeur parcourus un indice indiquant le media courant.
      */
     private Map<Integer, Integer> headPositions;
-    
+
     /**
      * Profondeur de la tête de lecture.
      */
     private int depth;
-    
-    
 
     // CONSTRUCTEUR
 
@@ -57,7 +53,6 @@ public class StdEditorModel implements IEditorModel {
         return rootPlaylist;
     }
 
-
     @Override
     public String getInfos() {
         int duration = 0;
@@ -66,15 +61,15 @@ public class StdEditorModel implements IEditorModel {
         }
         return "playlist name = " + getCurrentPlaylist().getName() +
                 " total duration " + duration;
-    }
+   }
 
     // COMMANDES
 
-   /*void setCurrentPlaylist(Playlist playlist) {
+    void setCurrentPlaylist(Playlist playlist) {
         if (playlist == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel setCurrentPlaylist");
         }        currentPlaylist = playlist;
-    }*/
+    }
 
     @Override
     public void create(String name) {
@@ -106,6 +101,7 @@ public class StdEditorModel implements IEditorModel {
             throw new AssertionError("Paramètre invalide StdEditorModel addFile");
         }
         BufferedReader lecteurAvecBuffer = null;
+
         IMedia list = new LoadFiles().loadFile(path);
         try {
             lecteurAvecBuffer = new BufferedReader(new FileReader(path));
@@ -117,7 +113,8 @@ public class StdEditorModel implements IEditorModel {
         } finally {
             lecteurAvecBuffer.close();
         }
-        getCurrentPlaylist().addFile(list);
+        getCurrentPlaylist().addFile(list);*//*
+
     }
 
     @Override
@@ -160,11 +157,12 @@ public class StdEditorModel implements IEditorModel {
 
 	public void enterList() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void ascendList() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
+

@@ -1,0 +1,70 @@
+@startuml
+package facade {
+     package editor {
+            interface IEditorModel {
+                String getInfos()
+                void create(String name)
+                void load(File f)
+                void save()
+                void addFile(String path) throws IOException
+                void addFilesFromFolder(String path) throws IOException
+                void addList(String path) throws IOException
+            }
+            class StdEditorModel implements IEditorModel {
+                IPlaylist getCurrentPlaylist()
+                public void setCurrentPlaylist(Playlist playlist)
+                public void enterList()
+                public void ascendList()
+            }
+            StdEditorModel ..> IPlaylistManager : manager
+            StdEditorModel ..> IPlaylist : currentPlaylist
+     }
+     package player {
+        interface IPlayerModel {
+            String getInfos()
+            void load(File f)
+            void play() throws InterruptedException
+            void pause() throws InterruptedException
+            void stop() throws InterruptedException
+            void forward() throws InterruptedException
+            void backward()
+            void nextList() throws InterruptedException
+            void previousList()
+        }
+
+        interface IPlayerObserver {
+            void attach(Observer o)
+            void dettach(Observer o)
+            void notifyObserversTime(int time)
+            void notifyObserversFile(String newInfos)
+        }
+
+        abstract class PlayerObserver implements IPlayerObserver {
+        }
+        PlayerObserver ..> "0..*" Observer : observers
+
+        class StdPlayerModel extends PlayerObserver implements IPlayerModel {
+            private int headDuration
+            private Map<Integer, Integer> map
+            private int depth
+            public class playFileTask extends TimerTask
+            public Playlist getRootPlaylist()
+            public int getCurrentTime()
+            public int getMediaDuration()
+            public int getDepth()
+            public void setRootPlaylist(Playlist playlist)
+            public void setCurrentTime(int time)
+            public void incrementDepth()
+            public void decrementDepth()
+            public IMedia getCurrentFile()
+            public SubList getParentCurrentFile()
+            public void incrementHeadDuration()
+        }
+        StdPlayerModel ..> XMLPlaylistManager : manager
+        StdPlayerModel ..> Playlist : currentPlaylist
+        StdPlayerModel ..> Playlist : rootPlaylist
+        StdPlayerModel ..> XMLPlaylistManager : manager
+        StdPlayerModel ..> Timer : timer
+    }
+}
+@enduml

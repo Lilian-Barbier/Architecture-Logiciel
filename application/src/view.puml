@@ -1,0 +1,51 @@
+@startuml
+package view {
+    package graphic {
+        class GraphicPlayer {
+        	public void display()
+        	private void createModel()
+        	private void createView()
+        	private void placeComponents()
+        	private void createController()
+        	private void refresh()
+        	public static void main(String[] args)
+        	public void updateTime(int time)
+            public void updateFile(String newInfos)
+        }
+        GraphicPlayer ..> JFrame : mainFrame
+        GraphicPlayer ..> JLabel : infosCurrentFile
+        GraphicPlayer ..> JLabel : timeProgress
+        GraphicPlayer ..> JLabel : fullTime
+        GraphicPlayer ..> JProgressBar : progressBar
+        GraphicPlayer ..> JButton : play
+        GraphicPlayer ..> JButton : pasue
+        GraphicPlayer ..> JButton : next
+        GraphicPlayer ..> JButton : previous
+        GraphicPlayer ..> JButton : nextList
+        GraphicPlayer ..> JButton : previousList
+        GraphicPlayer ..> Playlist : model
+    }
+    package terminal {
+        class TerminalEditor {
+        	private void createModel()
+        	private void createController()
+        	private void refresh()
+        	public static void main(String[] args)
+        }
+        TerminalEditor ..> StdEditorModel : model
+        class TerminalPlayer implements Observer {
+        	private void createModel(File playlistFile)
+        	private void createController()
+        	private void refresh()
+        	public void updateTime(int time)
+        	public void updateFile(String newInfos)
+        	public static void main(String[] args)
+        }
+        TerminalPlayer ..> StdPlayerModel : model
+    }
+    interface Observer {
+    	public void updateTime(int time)
+    	public void updateFile(String newInfos)
+    }
+}
+@enduml
