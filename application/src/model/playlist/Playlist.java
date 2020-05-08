@@ -14,7 +14,7 @@ public class Playlist implements IPlaylist {
     /**
      * L'ensemble des IMedia contenus dans cette Playlist
      */
-	private SubList playlist;
+	private IMedia playlist;
     //private List<IMedia> playlist;
 
     /**
@@ -45,7 +45,7 @@ public class Playlist implements IPlaylist {
         return playlist;
     }*/
     
-    public SubList getPlaylist() {
+    public IMedia getPlaylist() {
     	return playlist;
     }
     
@@ -74,8 +74,9 @@ public class Playlist implements IPlaylist {
         if (list == null) {
             throw new AssertionError("Paramètre invalide Playlist addList");
         }
+        SubList sublist = (SubList) this.getPlaylist();
         for(IMedia m : list) {
-            this.getPlaylist().add(m);
+            sublist.add(m);
         }
     }
 
@@ -83,6 +84,7 @@ public class Playlist implements IPlaylist {
         if (media == null) {
             throw new AssertionError("Paramètre invalide Playlist addFile");
         }
-        this.getPlaylist().add(media);
+        SubList sublist = (SubList) this.getPlaylist();
+        sublist.add(media);
     }
 }

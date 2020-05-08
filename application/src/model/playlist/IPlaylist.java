@@ -13,7 +13,7 @@ public interface IPlaylist {
      * Renvoie l'ensemble des IMedia présent dans cette Playlist
      * @return this.playlist
      */
-    SubList getPlaylist();
+    IMedia getPlaylist();
 
     /**
      * Renvoie le nom de la Playlist

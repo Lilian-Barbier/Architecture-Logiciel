@@ -249,7 +249,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
     public IMedia getCurrentFile() {
     	
-    	SubList cursor = this.rootPlaylist.getPlaylist();
+    	SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
     	for (int k = 0; k < getDepth(); ++k) {
     		cursor = (SubList)cursor.getChild(headPositions.get(k));
     	}
@@ -273,7 +273,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
     public SubList getParentCurrentFile() {
 
-    	SubList cursor = this.rootPlaylist.getPlaylist();
+    	SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
     	for (int k = 0; k < getDepth(); ++k) {
     		cursor = (SubList)cursor.getChild(headPositions.get(k));
     	}
