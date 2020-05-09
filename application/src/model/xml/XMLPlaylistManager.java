@@ -27,6 +27,7 @@ public class XMLPlaylistManager extends PlaylistManager {
 
 			XPLPlaylistHandler handler = new XPLPlaylistHandler(getBuilder());
 			saxParser.parse(f, handler);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
