@@ -60,10 +60,8 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
         headPositions = new TreeMap<>();
         headPositions.put(0,0);
         depth = 0;
-        
         timer = new Timer();
         load(f);
-        
     }
 
     // METHODES
@@ -296,11 +294,9 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
     public void incrementHeadDuration() {
         currentTime = currentTime + 1;
         notifyObserversTime(currentTime);
-       
         if (currentTime == getCurrentFile().getDuration()) {
-        	forward();
+            forward();
         }
-        
     }
 
     /*CLASSES INTERNE*/

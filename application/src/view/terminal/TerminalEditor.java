@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 
 import facade.editor.StdEditorModel;
 
+import javax.swing.*;
+
 public class TerminalEditor {
 
 	private final String createList = "create";
@@ -41,7 +43,6 @@ public class TerminalEditor {
         	String line = reader.readLine();
 			//while(line != null && model.isFinish()) {
         	while(line != null) {
-
         		switch (line.split(" ")[0]) {
 					case createList:
 						model.create(line.split(" ")[1]);
@@ -61,7 +62,7 @@ public class TerminalEditor {
 						break;
 
 					case enterList:
-						model.enterList();
+						model.enterList(Integer.parseInt(line.split(" ")[1]));
 						break;
 
 					case ascendList:
@@ -116,7 +117,7 @@ public class TerminalEditor {
 
 	}
 
-	private void refresh() {
+	/*private void refresh() {
 		 if (model.canGetChange()) {
 			 changeInfo.setText("Cet appareil rend la monnaie");
 		 } else {
@@ -136,9 +137,8 @@ public class TerminalEditor {
 	    	 } else {
 	    		 b.setEnabled(true);
 	    	 }
-	     }
-
-	}
+     	}
+	}*/
 
 
 	// POINT D'ENTREE
@@ -147,10 +147,9 @@ public class TerminalEditor {
 		if(args.length != 1){
 			new AssertionError("TerminalPlayer main() : Argument manquant !");
 		}
+		//File f = new File();
 
-		File f = new File(args[0]);
-
-		new TerminalPlayer(f);
+		new TerminalEditor();
 	}
 
 

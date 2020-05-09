@@ -1,11 +1,12 @@
 package facade.editor;
 
-import model.list.*;
+import model.list.IMedia;
+import model.list.SubList;
 import model.playlist.IPlaylist;
 import model.playlist.IPlaylistManager;
 import model.playlist.Playlist;
-import model.playlist.PlaylistManager;
-import model.util.LoadFiles;
+import model.util.LoadAudio;
+import model.util.LoadVideo;
 import model.xml.XMLPlaylistManager;
 
 import java.io.*;
@@ -13,6 +14,13 @@ import java.util.Map;
 
 @SuppressWarnings("unused")
 public class StdEditorModel implements IEditorModel {
+
+    //  CONSTANTES
+    private static final String ERROR = "";
+    private static final String MTA = "mta";
+    private static final String MTV = "mtv";
+    private static final String SPLIT = ".";
+
 
     // ATTRIBUTS
 
@@ -24,9 +32,9 @@ public class StdEditorModel implements IEditorModel {
     /**
      * L'objet Playlist est la racine de notre playlist.
      */
-
     private Playlist rootPlaylist;
-    /**
+
+    /**.
      * Temps écoulé sur le fichier en cours.
      */
     private int currentTime;
@@ -49,26 +57,28 @@ public class StdEditorModel implements IEditorModel {
 
     // METHODES
 
-    IPlaylist getCurrentPlaylist() {
+    IPlaylist getRootPlaylist() {
         return rootPlaylist;
     }
+
+    public int getDepth() { return depth; }
 
     @Override
     public String getInfos() {
         int duration = 0;
-        for (IMedia list : getCurrentPlaylist().getPlaylist().subList(0, getCurrentPlaylist().getPlaylist().size())) {
+        /*for (IMedia list : getCurrentPlaylist().getPlaylist().subList(0, getCurrentPlaylist().getPlaylist().size())) {
             duration = duration + list.getDuration();
-        }
-        return "playlist name = " + getCurrentPlaylist().getName() +
+        }*/
+        return "playlist name = " + getRootPlaylist().getName() +
                 " total duration " + duration;
    }
 
     // COMMANDES
 
-    void setCurrentPlaylist(Playlist playlist) {
+    void setRootPlaylist(Playlist playlist) {
         if (playlist == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel setCurrentPlaylist");
-        }        currentPlaylist = playlist;
+        }        rootPlaylist = playlist;
     }
 
     @Override
@@ -76,7 +86,7 @@ public class StdEditorModel implements IEditorModel {
         if (name == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel create");
         }
-        getCurrentPlaylist().setName(name);
+        getRootPlaylist().setName(name);
     }
 
     @Override
@@ -87,8 +97,9 @@ public class StdEditorModel implements IEditorModel {
         String absolutePath = f.getParent() + "/";
         manager = new XMLPlaylistManager(absolutePath);
         manager.load(f);
-        currentPlaylist = manager.getPlaylist();
+        rootPlaylist = manager.getPlaylist();
     }
+
 
     @Override
     public void save() {
@@ -100,21 +111,37 @@ public class StdEditorModel implements IEditorModel {
         if (path == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel addFile");
         }
-        BufferedReader lecteurAvecBuffer = null;
-
-        IMedia list = new LoadFiles().loadFile(path);
+        BufferedReader br = null;
+        String[] splitter = path.split(SPLIT);
+        String extension = splitter[splitter.length - 1 ];
+        IMedia media = null;
+        switch (extension) {
+            case ERROR :
+                throw new AssertionError("Format non reconnu");
+            case MTA :
+                media = new LoadAudio().loadFile(path);
+            case MTV :
+                media = new LoadVideo().loadFile(path);
+        }
         try {
-            lecteurAvecBuffer = new BufferedReader(new FileReader(path));
-            list.setDuration(Integer.parseInt(lecteurAvecBuffer.readLine()));
-            list.setName(lecteurAvecBuffer.readLine());
-            list.setPath(path);
+            br = new BufferedReader(new FileReader(path));
+            if (media != null) {
+                media.setDuration(Integer.parseInt(br.readLine()));
+                media.setName(br.readLine());
+                media.setPath(path);
+            }
         } catch(FileNotFoundException exc) {
             System.out.println("Erreur d'ouverture");
         } finally {
-            lecteurAvecBuffer.close();
+            if (br != null) {
+                br.close();
+            }
         }
-        getCurrentPlaylist().addFile(list);*//*
-
+        SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
+        for (int k = 0; k < getDepth(); ++k) {
+            cursor = (SubList)cursor.getChild(headPositions.get(k));
+        }
+        cursor.add(media);
     }
 
     @Override
@@ -122,47 +149,52 @@ public class StdEditorModel implements IEditorModel {
         File f = new File(path);
         if (f.isDirectory()){
             File[] tab = f.listFiles();
-            for (int i = 0; i != tab.length; i++){
-                System.out.println(tab[i].getAbsolutePath());
-                if (tab[i].isDirectory()){
-                    addFilesFromFolder(tab[i].getAbsolutePath());
-                } else {
-                    addFile(tab[i].getAbsolutePath());
+            if (tab != null) {
+                for (int i = 0; i != tab.length; i++){
+                    System.out.println(tab[i].getAbsolutePath());
+                    if (tab[i].isDirectory()){
+                        addFilesFromFolder(tab[i].getAbsolutePath());
+                    } else {
+                        addFile(tab[i].getAbsolutePath());
+                    }
                 }
             }
         }
     }
 
     @Override
-    public void addList(String path) throws IOException {
+    public void addList(String path) {
         if (path == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel addList");
         }
-        BufferedReader lecteurAvecBuffer = null;
-        IMedia list = new SubList();
-        try {
-            lecteurAvecBuffer = new BufferedReader(new FileReader(path));
-            list.setDuration(Integer.parseInt(lecteurAvecBuffer.readLine()));
-            list.setName(lecteurAvecBuffer.readLine());
-            list.setPath(path);
-        } catch(FileNotFoundException exc) {
-            System.out.println("Erreur d'ouverture");
-        } finally {
-            if (lecteurAvecBuffer != null) {
-                lecteurAvecBuffer.close();
-            }
+        File f = new File(path);
+        String absolutePath = f.getParent() + "/";
+        manager = new XMLPlaylistManager(absolutePath);
+        manager.load(f);
+        SubList sublist = (SubList) manager.getPlaylist().getPlaylist();
+        SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
+        for (int k = 0; k < getDepth(); ++k) {
+            cursor = (SubList)cursor.getChild(headPositions.get(k));
         }
-        getCurrentPlaylist().addFile(list);
+        cursor.add(sublist);
     }
 
-	public void enterList() {
-		// TODO Auto-generated method stub
+    public void incrementDepth() {
+        depth = depth + 1;
+    }
 
+    public void decrementDepth() {
+        depth = depth - 1;
+    }
+
+	public void enterList(int index) {
+        incrementDepth();
+        headPositions.put(getDepth(), index);
 	}
 
 	public void ascendList() {
-		// TODO Auto-generated method stub
-
+        headPositions.remove(getDepth());
+        decrementDepth();
 	}
 }
 

@@ -33,12 +33,6 @@ package model {
             public void remove(IMedia list)
         }
         SubList o--> "0..*" IMedia : contains
-        enum MediaType {
-            Nothing,
-            Audio,
-            Video,
-            Sublist
-        }
         interface IListBuilder {
             Playlist getPlaylist()
             void startSublist()
@@ -57,23 +51,21 @@ package model {
             private final List<String> subListsName
         }
         StdListBuilder ..> Playlist : playlist
-        StdListBuilder ..> MediaType : type
         StdListBuilder ..> "0..*" IMedia : subListMedias
-    }
-    package playlist {
-        interface IPlaylist {
-            SubList getPlaylist()
-            String getName()
-            void setPlaylist(SubList playlist)
-            void setName(String name)
-            void addList(List<IMedia> list)
-            void addFile(IMedia media)
+        package playlist {
+            interface IPlaylist {
+                IMedia getPlaylist()
+                String getName()
+                void setPlaylist(SubList playlist)
+                void setName(String name)
+                void addList(List<IMedia> list)
+                void addFile(IMedia media)
+            }
+            class Playlist implements IPlaylist {
+                private String name
+            }
+            Playlist ..> "0..*" IMedia : playlist
         }
-        class Playlist implements IPlaylist {
-            private String name
-        }
-        Playlist ..> "0..*" SubList : playlist
-
         interface IPlaylistManager {
             Playlist getPlaylist()
             IListBuilder getBuilder()
@@ -196,12 +188,12 @@ package view {
         GraphicPlayer ..> JLabel : fullTime
         GraphicPlayer ..> JProgressBar : progressBar
         GraphicPlayer ..> JButton : play
-        GraphicPlayer ..> JButton : pasue
+        GraphicPlayer ..> JButton : pause
         GraphicPlayer ..> JButton : next
         GraphicPlayer ..> JButton : previous
         GraphicPlayer ..> JButton : nextList
         GraphicPlayer ..> JButton : previousList
-        GraphicPlayer ..> Playlist : model
+        GraphicPlayer ..> StdPlayerModel : model
     }
     package terminal {
         class TerminalEditor {
