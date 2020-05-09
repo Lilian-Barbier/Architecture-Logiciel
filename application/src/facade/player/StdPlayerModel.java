@@ -14,9 +14,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 
-public class StdPlayerModel implements IPlayerModel {
+public class StdPlayerModel implements IPlayerModel, IPlayerSubject {
 
-	private IPlayerSubject obs;
+	private IObservable obs;
 	
     /**
      * L'objet Playlist est la racine de notre playlist.

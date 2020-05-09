@@ -5,7 +5,7 @@ import java.util.List;
 
 import view.Observer;
 
-public class PlayerSubject implements IPlayerSubject{
+public class PlayerSubject implements IObservable{
 
 	private List<Observer> observers;
 	
