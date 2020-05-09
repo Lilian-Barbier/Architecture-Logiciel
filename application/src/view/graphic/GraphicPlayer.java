@@ -17,6 +17,7 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
 import facade.player.StdPlayerModel;
+import model.list.IMedia;
 import view.Observer;
 import view.terminal.TerminalPlayer;
 
@@ -73,11 +74,11 @@ public class GraphicPlayer implements Observer {
 	private void createView() {
         mainFrame = new JFrame("Graphic Player");
         
-        infosCurrentFile = new JLabel("Name : xxx - Artiste : xxx - Duree : xxx");
-        timeProgress = new JLabel("0:15");
-    	fullTime = new JLabel("1:35");
+        infosCurrentFile = new JLabel();
+        timeProgress = new JLabel();
+    	fullTime = new JLabel();
     	
-    	progressBar = new JProgressBar(0,95);
+    	progressBar = new JProgressBar();
     	progressBar.setEnabled(false);
     	
         play = new JButton("play");
@@ -199,12 +200,16 @@ public class GraphicPlayer implements Observer {
 
 	@Override
 	public void update() {
+		
+		IMedia currentFile = model.getCurrentFile();
+		
 		String newInfos = "<html>";
-		newInfos += model.getInfos().replace(";", "<br/>");
+		newInfos += model.getPathSubList() + "<br/>";
+		newInfos += currentFile.getInfos().replace(";", "<br/>") + "<br/>";
 		newInfos += "</html>";
 				
 		int time = model.getCurrentTime();
-		int mediaDuration = model.getMediaDuration();
+		int mediaDuration = currentFile.getDuration();
 		
 		timeProgress.setText("" + time);
 		progressBar.setValue(time);

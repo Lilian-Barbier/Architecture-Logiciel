@@ -121,7 +121,7 @@ public class TerminalPlayer implements Observer {
 	public void update() {
 		String newInfos = model.getCurrentFile().getName();
 		int time = model.getCurrentTime();
-		int mediaDuration = model.getMediaDuration();
+		int mediaDuration = model.getCurrentFile().getDuration();
 		
 		System.out.print("\r" + newInfos + " : " + time + "/" + mediaDuration);
 	}

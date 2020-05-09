@@ -1,18 +1,19 @@
 package facade.editor;
 
+import model.list.IListBuilder;
 import model.list.IMedia;
+import model.list.StdListBuilder;
 import model.list.SubList;
 import model.playlist.IPlaylist;
-import model.playlist.IPlaylistManager;
 import model.playlist.Playlist;
 import model.util.LoadAudio;
 import model.util.LoadVideo;
-import model.xml.XMLPlaylistManager;
+import model.xml.XMLPlaylistLoader;
+import model.xml.XMLPlaylistSaver;
 
 import java.io.*;
 import java.util.Map;
 
-@SuppressWarnings("unused")
 public class StdEditorModel implements IEditorModel {
 
     //  CONSTANTES
@@ -25,19 +26,9 @@ public class StdEditorModel implements IEditorModel {
     // ATTRIBUTS
 
     /**
-     * Le manager de fichier associé au StbEditorModel
-     */
-    private IPlaylistManager manager;
-
-    /**
      * L'objet Playlist est la racine de notre playlist.
      */
     private Playlist rootPlaylist;
-
-    /**.
-     * Temps écoulé sur le fichier en cours.
-     */
-    private int currentTime;
 
     /**
      * On associe pour chaque profondeur parcourus un indice indiquant le media courant.
@@ -94,16 +85,15 @@ public class StdEditorModel implements IEditorModel {
         if (f == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel load");
         }
-        String absolutePath = f.getParent() + "/";
-        manager = new XMLPlaylistManager(absolutePath);
-        manager.load(f);
-        rootPlaylist = manager.getPlaylist();
+        IListBuilder playlistBuilder = new StdListBuilder(f);
+        XMLPlaylistLoader.load(f, playlistBuilder);
+        rootPlaylist = playlistBuilder.getPlaylist();
     }
 
 
     @Override
     public void save() {
-        manager.save();
+    	XMLPlaylistSaver.save(this.getRootPlaylist());
     }
 
     @Override
@@ -168,10 +158,10 @@ public class StdEditorModel implements IEditorModel {
             throw new AssertionError("Paramètre invalide StdEditorModel addList");
         }
         File f = new File(path);
-        String absolutePath = f.getParent() + "/";
-        manager = new XMLPlaylistManager(absolutePath);
-        manager.load(f);
-        SubList sublist = (SubList) manager.getPlaylist().getPlaylist();
+        
+        IListBuilder playlistBuilder = new StdListBuilder(f);
+        XMLPlaylistLoader.load(f, playlistBuilder);
+        SubList sublist = (SubList) playlistBuilder.getPlaylist().getPlaylist();
         SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
         for (int k = 0; k < getDepth(); ++k) {
             cursor = (SubList)cursor.getChild(headPositions.get(k));

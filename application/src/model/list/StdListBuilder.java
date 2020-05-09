@@ -4,13 +4,15 @@ import model.playlist.Playlist;
 import model.util.LoadAudio;
 
 import java.util.List;
+import java.io.File;
 import java.util.ArrayList;
 
-@SuppressWarnings("unused")
 public class StdListBuilder implements IListBuilder {
 
     // ATTRIBUTS
-	private final String absolutePath;
+	
+	
+	private String filesFolder;
 
 	/**
 	 * La Playlist construite dans ce StdListBuilder
@@ -44,11 +46,11 @@ public class StdListBuilder implements IListBuilder {
     
     // CONSTRUCTEUR
 
-    public StdListBuilder(Playlist playlist, String absolutePath) {
-        if (playlist == null || absolutePath == null) {
+    public StdListBuilder(Playlist playlist, String filesFolder) {
+        if (playlist == null ) {
             throw new AssertionError("Paramètre invalide StdListBuilder constructeur");
         }
-    	this.absolutePath = absolutePath;
+        this.filesFolder = filesFolder;
         this.playlist = playlist;
         this.type = MediaType.Nothing;
         this.subListsMedias = new ArrayList<>();
@@ -56,12 +58,9 @@ public class StdListBuilder implements IListBuilder {
         this.subListsName = new ArrayList<>();
     }
 
-    public StdListBuilder(String absolutePath) {
-		if (absolutePath == null) {
-			throw new AssertionError("Paramètre invalide StdListBuilder constructeur");
-		}
-    	this.absolutePath = absolutePath;
-        this.playlist = new Playlist();
+    public StdListBuilder(File fileLoad) {
+    	this.filesFolder = fileLoad.getParent() + "/";  
+        this.playlist = new Playlist(fileLoad.getName());
         this.type = MediaType.Nothing;
         this.subListsMedias = new ArrayList<>();
         this.depthList = 0;
@@ -70,7 +69,7 @@ public class StdListBuilder implements IListBuilder {
 
     // METHODES
 
-    public Playlist getPlaylist() {
+	public Playlist getPlaylist() {
         return playlist;
     }
 
@@ -133,7 +132,7 @@ public class StdListBuilder implements IListBuilder {
     		System.out.println("StopAudio : Path Null");
     	}
     	
-    	IMedia a = new LoadAudio().loadFile(absolutePath + path);
+    	IMedia a = new LoadAudio().loadFile(filesFolder + path);
     	
     	//Si cet audio est contenus dans une sous-liste
     	if(depthList > 0) {

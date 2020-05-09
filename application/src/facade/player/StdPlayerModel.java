@@ -1,13 +1,13 @@
 package facade.player;
 
+import model.list.IListBuilder;
 import model.list.IMedia;
+import model.list.StdListBuilder;
 import model.list.SubList;
 import model.playlist.Playlist;
-import model.xml.XMLPlaylistManager;
+import model.xml.XMLPlaylistLoader;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,12 +15,6 @@ import java.util.TreeMap;
 
 public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
-    // ATTRIBUTS
-
-	/**
-	 * Manager de playlist XML : load / Save
-	 */
-    private XMLPlaylistManager manager;
     
     /**
      * L'objet Playlist est la racine de notre playlist.
@@ -66,20 +60,15 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
     // METHODES
 
-    public Playlist getRootPlaylist() {
+    @Override
+	public Playlist getRootPlaylist() {
         return rootPlaylist;
     }
 
-    public int getCurrentTime() {
+    @Override
+	public int getCurrentTime() {
         return currentTime;
     }
-
-    public int getMediaDuration() {
-        IMedia current = getCurrentFile();
-        return current.getDuration();
-    }
-
-    public int getDepth() { return depth; }
 
     @Override
     public String getInfos() {
@@ -91,34 +80,30 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
     // COMMANDES
 
-    public void setRootPlaylist(Playlist playlist) {
+    @Override
+	public void setRootPlaylist(Playlist playlist) {
         if (playlist == null) {
             throw new AssertionError("Paramètre invalide StdPlayerModel setCurrentPlaylist");
         }
         rootPlaylist = playlist;
     }
 
-    public void setCurrentTime(int time) {
+    @Override
+	public void setCurrentTime(int time) {
         if (time >= 0) {
             throw new AssertionError("Paramètre invalide StdPlayerModel setHeadDuration");
         }
         currentTime = time;
     }
 
-    public void incrementDepth() {
-        depth = depth + 1;
-    }
-
-    public void decrementDepth() {
-        depth = depth - 1;
-    }
-
     @Override
-    public void load(File f) {
-		String absolutePath = f.getParent() + "/";  
-        manager = new XMLPlaylistManager(absolutePath);
-        manager.load(f);
-        rootPlaylist = manager.getPlaylist();
+    public void load(File f) {        
+    	if (f == null) {
+    		throw new AssertionError("Paramètre invalide StdEditorModel load");
+    	}
+        IListBuilder playlistBuilder = new StdListBuilder(f);
+        XMLPlaylistLoader.load(f, playlistBuilder);
+        rootPlaylist = playlistBuilder.getPlaylist();
     }
 
     @Override
@@ -172,7 +157,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
             if (currentMedia instanceof SubList) {
                 while (currentMedia instanceof  SubList) {
                     incrementDepth();
-                    headPositions.put(getDepth(), 0);
+                    headPositions.put(depth, 0);
                     currentMedia = getCurrentFile();
                 }
             }
@@ -207,7 +192,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
             if (currentMedia instanceof SubList) {
                 while (currentMedia instanceof  SubList) {
                     incrementDepth();
-                    headPositions.put(getDepth(), ((SubList) currentMedia).size()-1);
+                    headPositions.put(depth, ((SubList) currentMedia).size()-1);
                     currentMedia = getCurrentFile();
                 }
             }
@@ -217,77 +202,79 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
     	}
     }
 
-    /**
-     * Termine la sous-liste actuelle et démarre la lecture de l’entrée suivante dans la liste parent
-     */
     @Override
     public void nextList() {
 
         SubList parentList = getParentCurrentFile();
-        headPositions.put(getDepth(), parentList.size()-1);
+        headPositions.put(depth, parentList.size()-1);
         forward();
         
     }
     
-    /**
-     * Termine la sous-liste actuelle et revient à l’entrée précédente dans la liste parent.
-     */
     @Override
     public void previousList() {
 
-        headPositions.put(getDepth(), 0);
+        headPositions.put(depth, 0);
         backward();
         
     }
     
-
-    public IMedia getCurrentFile() {
+    @Override
+	public String getPathSubList() {
+    	String ret = this.rootPlaylist.getName() + "/";
     	
     	SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
-    	for (int k = 0; k < getDepth(); ++k) {
+    	for (int k = 0; k < depth; ++k) {
+    		cursor = (SubList)cursor.getChild(headPositions.get(k));
+        	ret += cursor.getName() + "/";
+    	}
+    	
+    	return ret;
+    }
+
+    @Override
+	public IMedia getCurrentFile() {
+    	
+    	SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
+    	for (int k = 0; k < depth; ++k) {
     		cursor = (SubList)cursor.getChild(headPositions.get(k));
     	}
     	
-    	return cursor.getChild(headPositions.get(getDepth()));
-    	
-    	/*
-        IMedia media = this.rootPlaylist.getPlaylist().getChild(headPositions.get(0));
-        
-        if (media instanceof SubList) {
-            SubList sublist = (SubList) media;
-            for (int k = 1; k <= getDepth(); ++k) {
-                int head = headPositions.get(k);
-                sublist = (SubList) sublist.getChild(head);
-            }
-            return sublist;
-        }
-        
-        return media;*/
+    	return cursor.getChild(headPositions.get(depth));
     }
 
-    public SubList getParentCurrentFile() {
+    @Override
+	public SubList getParentCurrentFile() {
 
     	SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
-    	for (int k = 0; k < getDepth(); ++k) {
+    	for (int k = 0; k < depth; ++k) {
     		cursor = (SubList)cursor.getChild(headPositions.get(k));
     	}
     	
     	return cursor;
-    	
-    	/*
-        IMedia media = this.rootPlaylist.getPlaylist().getChild(headPositions.get(0));
-        if (media instanceof SubList) {
-            SubList sublist = (SubList) media;
-            for (int k = 1; k < getDepth(); ++k) {
-                int head = headPositions.get(k);
-                sublist = (SubList) sublist.getChild(head);
-            }
-            return sublist;
-        }
-        return null;*/
     }
 
-    public void incrementHeadDuration() {
+    
+    
+    
+    /**
+     * Incrémente la profondeur du compteur de sous-liste de 1
+     */
+	private void incrementDepth() {
+        depth = depth + 1;
+    }
+	
+    /**
+     * Décrémente la profondeur du compteur de sous-liste de 1
+     */
+    private void decrementDepth() {
+        depth = depth - 1;
+    }
+    
+    /**
+     * Ajoute une seconde au temps passé.
+     */
+	private void incrementTime() {
         currentTime = currentTime + 1;
 
         if (currentTime == getCurrentFile().getDuration()) {
@@ -301,8 +288,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 		
     	@Override
 		public void run() {
-			//System.out.println(new Date() + " Execution de ma tache");
-			incrementHeadDuration();
+			incrementTime();
 		}
     	
 	}
