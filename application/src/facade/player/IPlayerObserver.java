@@ -8,7 +8,6 @@ public interface IPlayerObserver {
 	
 	public void dettach(Observer o);
 	
-	public void notifyObserversTime(int time);
+	public void notifyObservers();
 	
-	public void notifyObserversFile(String newInfos);
 }

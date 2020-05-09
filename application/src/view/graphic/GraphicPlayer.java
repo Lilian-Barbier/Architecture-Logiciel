@@ -60,7 +60,7 @@ public class GraphicPlayer implements Observer {
 	 * Rend l'application visible au centre de l'écran.
 	 */
 	public void display() {
-		refresh();
+		update();
         mainFrame.pack();
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
@@ -179,31 +179,6 @@ public class GraphicPlayer implements Observer {
         });
 	}	
 
-	private void refresh() {
-		 /*
-		 if (model.canGetChange()) {
-			 changeInfo.setText("Cet appareil rend la monnaie");
-		 } else {
-			 changeInfo.setText("Cet appareil ne rend pas la monnaie");
-	     }
-	     creditInfo.setText("Vous disposez d'un crédit de "
-	    		 + model.getCreditAmount() + " cents");
-	     if (model.getLastDrink() == null) {
-	    	 drinkOutput.setText("");
-	     } else {
-	    	 drinkOutput.setText(model.getLastDrink().toString());
-	     }
-	     changeOutput.setText("" + model.getChangeAmount());
-	     for (final JButton b : buttonToDrinkRelation.keySet()) {
-	    	 if (model.getDrinkNb(buttonToDrinkRelation.get(b)) == 0) {
-	    		 b.setEnabled(false);
-	    	 } else {
-	    		 b.setEnabled(true);
-	    	 }
-	     }*/
-	}
-	
-	
 	// POINT D'ENTREE
 	public static void main(String[] args) {
 
@@ -221,19 +196,20 @@ public class GraphicPlayer implements Observer {
 		});
 	}
 
-	@Override
-	public void updateTime(int time) {
-		timeProgress.setText("" + time);
-		progressBar.setValue(time);
-	}
 
 	@Override
-	public void updateFile(String newInfos) {
-		int duration = model.getMediaDuration();
-		progressBar.setValue(0);
-		progressBar.setMaximum(duration);
-		fullTime.setText("" + duration);
-		timeProgress.setText("" + 0);
+	public void update() {
+		String newInfos = "<html>";
+		newInfos += model.getInfos().replace(";", "<br/>");
+		newInfos += "</html>";
+				
+		int time = model.getCurrentTime();
+		int mediaDuration = model.getMediaDuration();
+		
+		timeProgress.setText("" + time);
+		progressBar.setValue(time);
+		progressBar.setMaximum(mediaDuration);
+		fullTime.setText("" + mediaDuration);
 		infosCurrentFile.setText(newInfos);
 	}
 

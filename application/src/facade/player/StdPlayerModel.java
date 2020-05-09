@@ -63,7 +63,6 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
         
         timer = new Timer();
         load(f);
-        
     }
 
     // METHODES
@@ -85,13 +84,10 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
     @Override
     public String getInfos() {
-        int duration = 0;
-        /*for (IMedia list : rootPlaylist.getPlaylist().subList(0, rootPlaylist.getPlaylist().size())) {
-            duration = duration + list.getDuration();
-        }*/
         IMedia current = getCurrentFile();
         return "Playlist name : " + rootPlaylist.getName() +
-                "; Total duration : " + duration + "; " + current.getInfos();
+                "; Total duration : " + rootPlaylist.getPlaylist().getDuration() + 
+                "; " + current.getInfos();
     }
 
     // COMMANDES
@@ -128,10 +124,9 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
     @Override
     public void play() {
-
-        notifyObserversFile(getCurrentFile().getInfos());
     	timer = new Timer();
     	timer.schedule(new playFileTask(), 0, 1000);
+        notifyObservers();
     }
 
     @Override
@@ -184,7 +179,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
             }
             
             currentTime = 0;
-            notifyObserversFile(getCurrentFile().getInfos());
+            notifyObservers();
     	}
     }
 
@@ -219,7 +214,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
             }
             
             currentTime = 0;
-            notifyObserversFile(getCurrentFile().getInfos());
+            notifyObservers();
     	}
     }
 
@@ -295,12 +290,11 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 
     public void incrementHeadDuration() {
         currentTime = currentTime + 1;
-        notifyObserversTime(currentTime);
-       
+
         if (currentTime == getCurrentFile().getDuration()) {
         	forward();
         }
-        
+        notifyObservers();
     }
 
     /*CLASSES INTERNE*/

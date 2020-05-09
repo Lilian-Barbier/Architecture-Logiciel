@@ -104,31 +104,6 @@ public class TerminalPlayer implements Observer {
 		}
 	
 	}	
-
-	private void refresh() {
-		 /*
-		 if (model.canGetChange()) {
-			 changeInfo.setText("Cet appareil rend la monnaie");
-		 } else {
-			 changeInfo.setText("Cet appareil ne rend pas la monnaie");
-	     }
-	     creditInfo.setText("Vous disposez d'un crédit de "
-	    		 + model.getCreditAmount() + " cents");
-	     if (model.getLastDrink() == null) {
-	    	 drinkOutput.setText("");
-	     } else {
-	    	 drinkOutput.setText(model.getLastDrink().toString());
-	     }
-	     changeOutput.setText("" + model.getChangeAmount());
-	     for (final JButton b : buttonToDrinkRelation.keySet()) {
-	    	 if (model.getDrinkNb(buttonToDrinkRelation.get(b)) == 0) {
-	  s  		 b.setEnabled(false);
-	    	 } else {
-	    		 b.setEnabled(tprue);
-	    	 }
-	     }*/
-	}
-	
 	
 	// POINT D'ENTREE
 	public static void main(String[] args) {
@@ -142,16 +117,13 @@ public class TerminalPlayer implements Observer {
 		new TerminalPlayer(f);
 	}
 
-
 	@Override
-	public void updateTime(int time) {
-		System.out.print(time + "/" + model.getMediaDuration() + "\r");
-	}
-
-	//appelle mise à jour temps, quand on change de fichier
-	@Override
-	public void updateFile(String newInfos) {
-		System.out.println(newInfos);
+	public void update() {
+		String newInfos = model.getCurrentFile().getName();
+		int time = model.getCurrentTime();
+		int mediaDuration = model.getMediaDuration();
+		
+		System.out.print("\r" + newInfos + " : " + time + "/" + mediaDuration);
 	}
 	
 }
