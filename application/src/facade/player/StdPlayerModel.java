@@ -6,6 +6,7 @@ import model.list.StdListBuilder;
 import model.list.SubList;
 import model.playlist.Playlist;
 import model.xml.XMLPlaylistLoader;
+import view.Observer;
 
 import java.io.File;
 import java.util.Map;
@@ -13,9 +14,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 
-public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
+public class StdPlayerModel implements IPlayerModel {
 
-    
+	private IPlayerSubject obs;
+	
     /**
      * L'objet Playlist est la racine de notre playlist.
      */
@@ -49,6 +51,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
      * @param f : Fichier xpl contenant la playlist à lire.
      */
     public StdPlayerModel(File f) {
+    	obs = new PlayerSubject();
         rootPlaylist = new Playlist();
         currentTime = 0;
         headPositions = new TreeMap<>();
@@ -110,7 +113,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
     public void play() {
     	timer = new Timer();
     	timer.schedule(new playFileTask(), 0, 1000);
-        notifyObservers();
+        obs.notifyObservers();
     }
 
     @Override
@@ -163,7 +166,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
             }
             
             currentTime = 0;
-            notifyObservers();
+            obs.notifyObservers();
     	}
     }
 
@@ -198,7 +201,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
             }
             
             currentTime = 0;
-            notifyObservers();
+            obs.notifyObservers();
     	}
     }
 
@@ -280,7 +283,7 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
         if (currentTime == getCurrentFile().getDuration()) {
             forward();
         }
-        notifyObservers();
+        obs.notifyObservers();
     }
 
     /*CLASSES INTERNE*/
@@ -292,6 +295,9 @@ public class StdPlayerModel extends PlayerObserver implements IPlayerModel {
 		}
     	
 	}
+    
+    public void attach ( Observer o)  { obs.attach(o); }
+    public void dettach ( Observer o)  { obs.dettach(o); }
 
 }
 

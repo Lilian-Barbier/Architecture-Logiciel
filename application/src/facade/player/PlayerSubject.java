@@ -5,11 +5,11 @@ import java.util.List;
 
 import view.Observer;
 
-public abstract class PlayerObserver implements IPlayerSubject{
+public class PlayerSubject implements IPlayerSubject{
 
 	private List<Observer> observers;
 	
-	public PlayerObserver() {
+	public PlayerSubject() {
 		observers = new ArrayList<Observer>();
 	}
 	
@@ -26,6 +26,5 @@ public abstract class PlayerObserver implements IPlayerSubject{
 			o.update();
 		}
 	}
-	
 	
 }

@@ -5,6 +5,7 @@ import java.io.File;
 import model.list.IMedia;
 import model.list.SubList;
 import model.playlist.Playlist;
+import view.Observer;
 
 public interface IPlayerModel {
 
@@ -97,4 +98,8 @@ public interface IPlayerModel {
 	 */
 	SubList getParentCurrentFile();
 
+	
+	public void attach(Observer o);
+	
+	public void dettach(Observer o);
 }
