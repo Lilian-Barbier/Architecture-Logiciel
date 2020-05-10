@@ -10,9 +10,11 @@ import java.util.ArrayList;
 public class StdListBuilder implements IListBuilder {
 
     // ATTRIBUTS
-	
-	
-	private String filesFolder;
+
+	/**
+	 * Le répertoire des fichiers utilisés pour la construction de la list
+	 */
+	private final String filesFolder;
 
 	/**
 	 * La Playlist construite dans ce StdListBuilder
@@ -69,130 +71,180 @@ public class StdListBuilder implements IListBuilder {
 
     // METHODES
 
+	@Override
 	public Playlist getPlaylist() {
         return playlist;
     }
 
-    // COMMANDES
+	/**
+	 * Renvoie le type du IMedia en cours de construction
+	 * @return this.type
+	 */
+	public MediaType getType() {
+		return type;
+	}
 
-    @Override
+	/**
+	 * Renvoie la profondeur du IMedia en cours de construction
+	 * @return this.depthList
+	 */
+	public int getDepthList() {
+		return depthList;
+	}
+
+	/**
+	 * Renvoie le chemin du fichier en cours de création
+	 * @return this.path
+	 */
+	public String getPath() {
+		return path;
+	}
+
+	/**
+	 * Renvoie le nom de la Sublist parent lorsque l'on plonge en profondeur
+	 * @return this.subListsName
+	 */
+	public List<String> getSubListsName() {
+		return subListsName;
+	}
+
+	/**
+	 * Renvoie la Sublist parent lorsque l'on plonge en profondeur
+	 * @return this.subListsMedias
+	 */
+	public List<List<IMedia>> getSubListsMedias() {
+		return subListsMedias;
+	}
+
+	// COMMANDES
+
+
+	public void setDepthList(int depthList) {
+		this.depthList = depthList;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public void setType(MediaType type) {
+		this.type = type;
+	}
+
+	@Override
     public void startSublist() {
-    	if (this.type != MediaType.Nothing && this.type != MediaType.Sublist ) {
+    	if (getType() != MediaType.Nothing && getType() != MediaType.Sublist ) {
     		//TODO Exception
     		System.out.println("StartAudio : Type not valid ("+ this.type +")");
     	}
-    	this.type = MediaType.Sublist;
-    	depthList++;
-    	this.subListsMedias.add(new ArrayList<>());
+    	setType(MediaType.Sublist);
+    	setDepthList(getDepthList() + 1);
+    	getSubListsMedias().add(new ArrayList<>());
     }
 
     @Override
     public void stopSublist() {
-		System.out.println("test");
-    	if (this.type != MediaType.Sublist) {
+    	if (getType() != MediaType.Sublist) {
       		System.out.println("stopSublist : Type not valid ("+ this.type +")");
     	}
-    	if (this.subListsMedias.size() != depthList && depthList>=0) {
+    	if (getSubListsMedias().size() != getDepthList() && getDepthList() >= 0) {
     		//TODO Exception
     		System.out.println("addName : subListsMedias size not valid");
     	}
-    	SubList s = new SubList(subListsMedias.get(depthList-1), subListsName.get(depthList-1));
-    	type = MediaType.Nothing;
-    	subListsMedias.remove(depthList-1);
-    	subListsName.remove(depthList-1);
-    	depthList--;
-    	if (depthList > 0) {
-    		subListsMedias.get(depthList-1).add(s);
-    		type = MediaType.Sublist;
+    	SubList s = new SubList(getSubListsMedias().get(getDepthList() - 1), getSubListsName().get(getDepthList() - 1));
+    	setType(MediaType.Nothing);
+    	getSubListsMedias().remove(getDepthList() - 1);
+    	getSubListsName().remove(getDepthList() - 1);
+    	setDepthList(getDepthList() - 1);
+    	if (getDepthList() > 0) {
+    		getSubListsMedias().get(getDepthList() - 1).add(s);
+    		setType(MediaType.Sublist);
     	} else {
     		getPlaylist().addFile(s);
-    		type = MediaType.Nothing;
+    		setType(MediaType.Nothing);
     	}
 	}
 
     @Override
     public void startAudio() {    	
     	//Un audio ne peut pas être dans une video
-    	if (this.type != MediaType.Nothing && this.type != MediaType.Sublist ) {
+    	if (getType() != MediaType.Nothing && getType() != MediaType.Sublist ) {
     		//TODO Exception
     		System.out.println("StartAudio : Type not valid ("+ this.type +")");
     	}
-    	this.type = MediaType.Audio;
-    	this.path = null;
+    	setType(MediaType.Audio);
+    	setPath(null);
     }
 
     @Override
     public void stopAudio() {
-    	if (this.type != MediaType.Audio) {
+    	if (getType() != MediaType.Audio) {
     		//TODO Exception
     		System.out.println("StopAudio : Type not valid ("+ this.type +")");
     	}
-    	if (this.path == null){
+    	if (getPath() == null){
     		//TODO Exception
     		System.out.println("StopAudio : Path Null");
     	}
-    	
     	IMedia a = new LoadAudio().loadFile(filesFolder + path);
-    	
-    	//Si cet audio est contenus dans une sous-liste
-    	if(depthList > 0) {
-    		subListsMedias.get(depthList-1).add(a);
-        	type = MediaType.Sublist;
-		//Si il est contenu dans la Media principal
+    	//Si cet audio est contenu dans une sous-liste
+    	if(getDepthList() > 0) {
+    		getSubListsMedias().get(getDepthList() - 1).add(a);
+        	setType(MediaType.Sublist);
+		//Si il est contenu dans le Media principal
 		} else {
     		getPlaylist().addFile(a);
-        	type = MediaType.Nothing;
+        	setType(MediaType.Nothing);
     	}
     }
 
     @Override
     public void startVideo() {    	
-    	if (this.type != MediaType.Nothing && this.type != MediaType.Sublist ) {
+    	if (getType() != MediaType.Nothing && getType() != MediaType.Sublist ) {
     		//TODO Exception
     		System.out.println("StartVideo : Type not valid");
     	}
-    	type = MediaType.Video;
-    	path = null;
+    	setType(MediaType.Video);
+    	setPath(null);
     }
 
     @Override
     public void stopVideo() {
-    	if (this.type != MediaType.Video || this.path == null) {
+    	if (getType() != MediaType.Video || getPath() == null) {
 			//TODO Exception
 			System.out.println("StopVideo : Type not valid");
 		}
-    	Video v = new Video(path);
-    	
+    	Video v = new Video(getPath());
     	//Si cette video est contenu dans une sous-liste
-    	if (depthList > 0) {
-    		subListsMedias.get(depthList-1).add(v);
-        	type = MediaType.Sublist;
+    	if (getDepthList() > 0) {
+    		getSubListsMedias().get(getDepthList() - 1).add(v);
+        	setType(MediaType.Sublist);
 		//Si elle est contenu dans le Media principal
     	} else {
     		getPlaylist().addFile(v);
-        	type = MediaType.Nothing;
+        	setType(MediaType.Nothing);
     	}
     }
 
     @Override
     public void addName(String name) {
-    	if (this.type != MediaType.Sublist) {
+    	if (getType() != MediaType.Sublist) {
     		//TODO Exception
     		System.out.println("addName : Type not valid ("+ this.type +")");
     	}
-    	if (this.subListsMedias.size() != depthList) {
+    	if (getSubListsMedias().size() != getDepthList()) {
     		//TODO Exception
     		System.out.println("addName : subListsMedias size not valid");
     	}
-        this.subListsName.add(name);
+    	getSubListsName().add(name);
     }
     
     @Override
     public void addPath(String path) {
-    	if (this.path != null || this.type == MediaType.Sublist) {
+    	if (getPath() != null || getType() == MediaType.Sublist) {
     		//TODO Exception
 			System.out.println("addPath : Type not valid ("+ this.type +") or path == null (" + this.path +")" );
 		}
-    	this.path = path;
+    	setPath(path);
     }
 }

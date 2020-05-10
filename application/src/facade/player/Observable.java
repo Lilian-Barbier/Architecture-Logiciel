@@ -26,5 +26,4 @@ public class Observable implements IObservable{
 			o.update();
 		}
 	}
-	
 }

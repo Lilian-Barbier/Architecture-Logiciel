@@ -3,8 +3,6 @@ package facade.editor;
 import java.io.File;
 import java.io.IOException;
 
-
-@SuppressWarnings("unused")
 public interface IEditorModel {
 
     // METHODES

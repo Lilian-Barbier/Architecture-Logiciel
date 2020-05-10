@@ -46,8 +46,6 @@ public class SubList extends Media {
         }
         
         return contains.get(num);
-        //IMedia[] a = (IMedia[]) contains.toArray();
-        //return a[num];
     }
 
     public void setContains(List<IMedia> contains) {
@@ -78,6 +76,10 @@ public class SubList extends Media {
                 "; SubList name : " + getName();
     }
 
+    /**
+     * Renvoie la taille de la sous-liste
+     * @return this.contains.size()
+     */
 	public Integer size() {
 		return contains.size();
 	}

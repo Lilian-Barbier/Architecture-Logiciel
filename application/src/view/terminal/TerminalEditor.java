@@ -9,150 +9,129 @@ import facade.editor.IEditorModel;
 import facade.editor.StdEditorModel;
 import facade.player.IPlayerModel;
 
-import javax.swing.*;
-
 public class TerminalEditor {
 
-	private final String createList = "create";
-	private final String loadList = "load";
-	private final String saveList = "save";
-	private final String showInfos = "infos";
-	private final String enterList = "enter";
-	private final String ascendList = "ascend";
-	private final String importFile = "import";
-	private final String importFiles = "importFiles";
-	private final String importList = "importXPL";
-	private final String help = "help";
+	private static final String CREATE_LIST = "create";
+	private static final String LOAD_LIST = "load";
+	private static final String SAVE_LIST = "save";
+	private static final String SHOW_INFOS = "infos";
+	private static final String ENTER_LIST = "enter";
+	private static final String ASCEND_LIST = "ascend";
+	private static final String IMPORT_FILE = "import";
+	private static final String IMPORT_FILES = "importFiles";
+	private static final String IMPORT_LIST = "importXPL";
+	private static final String HELP = "help";
+	private static final String QUIT = "quit";
 
 	private IEditorModel model;
 
 	// CONSTRUCTEURS
+
 	public TerminalEditor() {
 		createModel();
         createController();
 	}
 
+	/**
+	 * Instancie le model
+	 */
 	private void createModel() {
         model = new StdEditorModel();
     }
 
+	/**
+	 * Création des Controller
+	 */
 	private void createController() {
-
-		System.out.println("Pour une aide : " + help);
-
+		System.out.println("Pour une aide : " + HELP);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
         	String line = reader.readLine();
-			//while(line != null && model.isFinish()) {
-        	while(line != null) {
+        	while (line != null) {
         		switch (line.split(" ")[0]) {
-					case createList:
+					case CREATE_LIST:
+						if (line.split(" ").length < 2) {
+							System.out.println("Veuillez indiquer un nom pour la playslit !");
+							break;
+						}
 						model.create(line.split(" ")[1]);
 						break;
-
-					case loadList:
+					case LOAD_LIST:
+						if (line.split(" ").length < 2) {
+							System.out.println("Veuillez indiquer le chemin d'une playlist à charger !");
+							break;
+						}
 						File f = new File(line.split(" ")[1]);
-						model.load(f);;
+						model.load(f);
 						break;
-
-					case saveList:
+					case SAVE_LIST:
 						model.save();
 						break;
-
-					case showInfos:
-						model.getInfos();
+					case SHOW_INFOS:
+						System.out.println(model.getInfos());
 						break;
-
-					case enterList:
-						model.enterList(Integer.parseInt(line.split(" ")[1]));
+					case ENTER_LIST:
+						if (line.split(" ").length < 2) {
+							System.out.println("Indice incorrecte");
+							break;
+						}
+						try {
+							model.enterList(Integer.parseInt(line.split(" ")[1]));
+						} catch (NumberFormatException e) {
+							System.out.println("Indice incorrecte");
+						}
 						break;
-
-					case ascendList:
+					case ASCEND_LIST:
 						model.ascendList();
 						break;
-
-					case importFile:
-						model.addFile(line.split(" ")[1]);
+					case IMPORT_FILE:
+						int index = line.indexOf(" ");
+						model.addFile(line.substring(index + 1));
 						break;
-
-					case importFiles:
+					case IMPORT_FILES:
 						model.addFilesFromFolder(line.split(" ")[1]);
 						break;
-
-					case importList:
+					case IMPORT_LIST:
 						model.addList(line.split(" ")[1]);
 						break;
-
-					case help:
-						System.out.println(createList + " : .");
-						System.out.println(loadList + " : .");
-						System.out.println(saveList + " : .");
-						System.out.println(showInfos + " : .");
-						System.out.println(enterList + " :  .");
-						System.out.println(ascendList + " : .");
-						System.out.println(importFile + " : .");
-						System.out.println(importFiles + " : .");
-						System.out.println(importList + " : .");
+					case HELP:
+						System.out.println(CREATE_LIST + " : créé une nouvelle playlist de nom passé en paramètre");
+						System.out.println(LOAD_LIST + " : charge la playliste de chemin passé en paramètre");
+						System.out.println(SAVE_LIST + " : enregistre la playlist en cours d'édition");
+						System.out.println(SHOW_INFOS + " : affiche les informations sur la playlist");
+						System.out.println(ENTER_LIST + " :  rentre dans la sous-liste d'indice passé en paramètre");
+						System.out.println(ASCEND_LIST + " : remonte dans la sous-liste parente");
+						System.out.println(IMPORT_FILE + " : ajoute le fichier passé en paramètre");
+						System.out.println(IMPORT_FILES + " : ajoute les fichiers passés en paramètre");
+						System.out.println(IMPORT_LIST + " : ajoute la playlist passée en paramètre");
+						System.out.println(QUIT + " : arrête le programme");
 						break;
-
+					case QUIT:
+						System.exit(0);
 					default:
 						System.out.println(line + " : commande introuvable.");
-						System.out.println("Pour une aide : " + help);
+						System.out.println("Pour une aide : " + HELP);
 						break;
 				}
-
 				line = reader.readLine();
 			}
-        }
-		catch (IOException e) {
+        } catch (IOException e) {
 				// Problème lors de la lecture
-				e.printStackTrace();
-		}
-        finally {
+				System.out.println("Erreur lors de la lecture d'un fichier, le programme doit se terminer.");
+				System.exit(-1);
+		} finally {
 			try {
 				reader.close();
 			} catch (IOException e) {
 				// Problème lors de la fermeture
-				e.printStackTrace();
+				System.out.println("Erreur lors de la fermeture d'un fichier, le programme doit se terminer.");
+				System.exit(-1);
 			}
 		}
-
 	}
-
-	/*private void refresh() {
-		 if (model.canGetChange()) {
-			 changeInfo.setText("Cet appareil rend la monnaie");
-		 } else {
-			 changeInfo.setText("Cet appareil ne rend pas la monnaie");
-	     }
-	     creditInfo.setText("Vous disposez d'un crédit de "
-	    		 + model.getCreditAmount() + " cents");
-	     if (model.getLastDrink() == null) {
-	    	 drinkOutput.setText("");
-	     } else {
-	    	 drinkOutput.setText(model.getLastDrink().toString());
-	     }
-	     changeOutput.setText("" + model.getChangeAmount());
-	     for (final JButton b : buttonToDrinkRelation.keySet()) {
-	    	 if (model.getDrinkNb(buttonToDrinkRelation.get(b)) == 0) {
-	    		 b.setEnabled(false);
-	    	 } else {
-	    		 b.setEnabled(true);
-	    	 }
-     	}
-	}*/
-
 
 	// POINT D'ENTREE
 	public static void main(String[] args) {
-
-		if(args.length != 1){
-			new AssertionError("TerminalPlayer main() : Argument manquant !");
-		}
-		//File f = new File();
-
 		new TerminalEditor();
 	}
-
-
 }
