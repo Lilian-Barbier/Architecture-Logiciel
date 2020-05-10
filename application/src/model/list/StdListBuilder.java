@@ -2,6 +2,7 @@ package model.list;
 
 import model.playlist.Playlist;
 import model.util.LoadAudio;
+import model.util.LoadVideo;
 
 import java.util.List;
 import java.io.File;
@@ -186,7 +187,7 @@ public class StdListBuilder implements IListBuilder {
     		//TODO Exception
     		System.out.println("StopAudio : Path Null");
     	}
-    	IMedia a = new LoadAudio().loadFile(filesFolder + path);
+    	IMedia a = new LoadAudio().loadFile(filesFolder + getPath());
     	//Si cet audio est contenu dans une sous-liste
     	if(getDepthList() > 0) {
     		getSubListsMedias().get(getDepthList() - 1).add(a);
@@ -214,7 +215,7 @@ public class StdListBuilder implements IListBuilder {
 			//TODO Exception
 			System.out.println("StopVideo : Type not valid");
 		}
-    	Video v = new Video(getPath());
+    	IMedia v = new LoadVideo().loadFile(filesFolder + getPath());
     	//Si cette video est contenu dans une sous-liste
     	if (getDepthList() > 0) {
     		getSubListsMedias().get(getDepthList() - 1).add(v);
