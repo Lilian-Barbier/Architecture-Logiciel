@@ -101,5 +101,4 @@ public interface IPlayerModel extends IPlayerSubject {
 	 * Termine la sous-liste actuelle et revient à l’entrée précédente dans la liste parent.
 	 */
 	void previousList();
-
 }

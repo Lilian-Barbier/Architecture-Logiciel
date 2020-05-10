@@ -19,21 +19,20 @@ public class XMLPlaylistSaver {
 		XMLOutputFactory xof = XMLOutputFactory.newInstance();
 		XMLStreamWriter xsw = null;
 		try {
-			String urlCourante = XMLPlaylistSaver.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-			urlCourante = urlCourante.substring(0, urlCourante.lastIndexOf("ArchiLogiciel"));
+			String urlCourante = XMLPlaylistLoader.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+			urlCourante = urlCourante.substring(0, urlCourante.lastIndexOf("/"));
 			int index = iPlaylist.getPlaylist().getName().lastIndexOf(".");
 			String s;
 			if (index != -1) {
-				s = urlCourante + "saves/" + iPlaylist.getPlaylist().getName().substring(0, index) + ".xpl";
-				xsw = xof.createXMLStreamWriter(new FileWriter(s));
+				s = urlCourante + "/saves/" + iPlaylist.getPlaylist().getName().substring(0, index) + ".xpl";
 			} else {
-				s = urlCourante + "saves/" + iPlaylist.getPlaylist().getName() + ".xpl";
-				xsw = xof.createXMLStreamWriter(new FileWriter(s));
+				s = urlCourante + "/saves/" + iPlaylist.getPlaylist().getName() + ".xpl";
 			}
+			xsw = xof.createXMLStreamWriter(new FileWriter(s));
 			xsw.writeStartDocument("UTF-8","1.0");
-			File src = new File("src/Playlist.dtd");
+			File src = new File("./Playlist.dtd");
 			BufferedReader br = new BufferedReader(
-					new InputStreamReader(new FileInputStream(src), "UTF-8"));
+					new InputStreamReader(new FileInputStream(src), StandardCharsets.UTF_8));
 			// Créer l'objet File Writer
 			String str;
 			// Copie le contenu dans le nouveau fichier

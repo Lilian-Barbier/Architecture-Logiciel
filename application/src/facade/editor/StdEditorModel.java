@@ -41,17 +41,18 @@ public class StdEditorModel implements IEditorModel {
      */
     private int depth;
 
+    /**
+     * Le chemin courant de la Playlist
+     */
+    private final String currentPath;
+
     // CONSTRUCTEUR
 
     public StdEditorModel() {
         String urlCourante = XMLPlaylistLoader.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-    
-        System.out.println(urlCourante);
-        
-        urlCourante = urlCourante.substring(0, urlCourante.lastIndexOf("ArchiLogiciel"));
-        System.out.println(urlCourante);
-        if (!new File(urlCourante + "saves/").exists()) {
-            boolean b = new File(urlCourante + "saves/").mkdirs();
+        urlCourante = urlCourante.substring(0, urlCourante.lastIndexOf("/"));
+        if (!new File(urlCourante + "/saves/").exists()) {
+            boolean b = new File(urlCourante + "/saves/").mkdirs();
             if (!b) {
                 System.out.println("Erreur lors de la création du dossier saves");
             }
@@ -60,6 +61,7 @@ public class StdEditorModel implements IEditorModel {
         headPositions.put(0,0);
         depth = 0;
         rootPlaylist = new Playlist();
+        currentPath = urlCourante;
     }
 
     // METHODES
@@ -157,6 +159,7 @@ public class StdEditorModel implements IEditorModel {
         if (path == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel addFile");
         }
+        path = path.replace(currentPath, ".");
         BufferedReader br = null;
         String[] splitter = path.split(POINT);
         String extension = splitter[splitter.length - 1 ];
@@ -175,11 +178,14 @@ public class StdEditorModel implements IEditorModel {
         try {
             br = new BufferedReader(new FileReader(path));
             if (media != null) {
-                media.setDuration(Integer.parseInt(br.readLine()));
+                int result = Integer.parseInt(br.readLine());
+                media.setDuration(result);
                 media.setName(br.readLine());
-                media.setPath(path);
+                media.setPath(path.replace("./", "../"));
             }
-        } catch(FileNotFoundException exc) {
+        } catch (NumberFormatException e) {
+            return;
+        } catch(FileNotFoundException exc ) {
             System.out.println("Erreur d'ouverture");
             return;
         } finally {
@@ -192,7 +198,8 @@ public class StdEditorModel implements IEditorModel {
     }
 
     @Override
-    public void addFilesFromFolder(String path) throws IOException {
+    public void addFilesFromFolder(String path) {
+
         File f = new File(path);
         if (f.isDirectory()){
             File[] tab = f.listFiles();
@@ -202,7 +209,11 @@ public class StdEditorModel implements IEditorModel {
                     if (tab[i].isDirectory()){
                         addFilesFromFolder(tab[i].getAbsolutePath());
                     } else {
-                        addFile(tab[i].getAbsolutePath());
+                        try {
+                            addFile(tab[i].getAbsolutePath());
+                        } catch (IOException e) {
+                            return;
+                        }
                     }
                 }
             }
@@ -216,6 +227,8 @@ public class StdEditorModel implements IEditorModel {
         if (path == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel addList");
         }
+        path = path.replace(currentPath, "");
+        path = path.substring(1);
         String[] splitter = path.split(POINT);
         String extension = splitter[splitter.length - 1 ];
         if (XPL.equals(extension)) {

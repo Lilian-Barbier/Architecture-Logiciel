@@ -11,13 +11,13 @@ import java.io.File;
 
 public class GraphicPlayer implements Observer {
 	
-	private static final String PATH_PLAY_BUTTON = "src/images/play.png";
+	/*private static final String PATH_PLAY_BUTTON = "src/images/play.png";
 	private static final String PATH_PAUSE_BUTTON = "src/images/pause.png";
 	private static final String PATH_NEXT_BUTTON = "src/images/next.png";
 	private static final String PATH_PREVIOUS_BUTTON = "src/images/previous.png";
 	private static final String PATH_NEXT_LIST_BUTTON = "src/images/nextList.png";
 	private static final String PATH_PREVIOUS_LIST_BUTTON = "src/images/previousList.png";
-	private static final String PATH_STOP_BUTTON = "src/images/stop.png";
+	private static final String PATH_STOP_BUTTON = "src/images/stop.png";*/
 
 	// ATTRIBUTS
 	private JFrame mainFrame;
@@ -76,13 +76,13 @@ public class GraphicPlayer implements Observer {
     	progressBar = new JProgressBar();
     	progressBar.setEnabled(false);
     	
-        play = new JButton(new ImageIcon(PATH_PLAY_BUTTON));
-    	pause = new JButton(new ImageIcon(PATH_PAUSE_BUTTON));
-    	forward = new JButton(new ImageIcon(PATH_NEXT_BUTTON));
-    	backward = new JButton(new ImageIcon(PATH_PREVIOUS_BUTTON));
-    	nextList = new JButton(new ImageIcon(PATH_NEXT_LIST_BUTTON));
-    	previousList = new JButton(new ImageIcon(PATH_PREVIOUS_LIST_BUTTON));
-    	stop = new JButton(new ImageIcon(PATH_STOP_BUTTON));
+        play = new JButton("play");
+    	pause = new JButton("pause");
+    	forward = new JButton("next");
+    	backward = new JButton("previous");
+    	nextList = new JButton("next list");
+    	previousList = new JButton("previous list");
+    	stop = new JButton("stop");
 	}
 
 	/**

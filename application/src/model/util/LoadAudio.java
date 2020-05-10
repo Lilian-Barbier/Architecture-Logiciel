@@ -15,15 +15,12 @@ public class LoadAudio implements LoadFiles {
         if (path == null) {
             throw new AssertionError("Paramètre invalide LoadAudio addFile");
         }
-        
 		Audio a = new Audio(path);
         BufferedReader br = null;
-
         /*
          * Ici Le choix de lire les données devrait dépendre du type d'extension
          * Switch selon le type ?
          */
-        
         try {
         	br = new BufferedReader(new FileReader(path));
             a.setDuration(Integer.parseInt(br.readLine()));

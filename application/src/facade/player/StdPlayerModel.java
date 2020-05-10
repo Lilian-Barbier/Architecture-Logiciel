@@ -79,24 +79,20 @@ public class StdPlayerModel implements IPlayerModel {
     @Override
     public String getPathSubList() {
         StringBuilder ret = new StringBuilder(this.rootPlaylist.getName() + "/");
-
         SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
         for (int k = 0; k < depth; ++k) {
             cursor = (SubList)cursor.getChild(headPositions.get(k));
             ret.append(cursor.getName()).append("/");
         }
-
         return ret.toString();
     }
 
     @Override
     public IMedia getCurrentFile() {
-
         SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
         for (int k = 0; k < depth; ++k) {
             cursor = (SubList)cursor.getChild(headPositions.get(k));
         }
-
         return cursor.getChild(headPositions.get(depth));
     }
 
