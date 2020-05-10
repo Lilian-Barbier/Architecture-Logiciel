@@ -54,4 +54,9 @@ public interface IEditorModel {
      * @throws IOException exception levée en cas d'erreur lors de la lecture du fichier
      */
     void addList(String path) throws IOException;
+    
+	public void enterList(int index);
+
+	public void ascendList();
+
 }

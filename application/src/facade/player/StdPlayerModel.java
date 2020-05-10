@@ -14,7 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 
-public class StdPlayerModel implements IPlayerModel, IPlayerSubject {
+public class StdPlayerModel implements IPlayerModel {
 
 	private IObservable obs;
 	
@@ -51,7 +51,7 @@ public class StdPlayerModel implements IPlayerModel, IPlayerSubject {
      * @param f : Fichier xpl contenant la playlist à lire.
      */
     public StdPlayerModel(File f) {
-    	obs = new PlayerSubject();
+    	obs = new Observable();
         rootPlaylist = new Playlist();
         currentTime = 0;
         headPositions = new TreeMap<>();

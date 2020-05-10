@@ -7,8 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,19 +14,19 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
+import facade.player.IPlayerModel;
 import facade.player.StdPlayerModel;
 import model.list.IMedia;
 import view.Observer;
-import view.terminal.TerminalPlayer;
 
 public class GraphicPlayer implements Observer {
 	
-	private final String PATH_PLAY_BUTTON = "../../images/play.png";
+	/*private final String PATH_PLAY_BUTTON = "../../images/play.png";
 	private final String PATH_PAUSE_BUTTON = "../../images/pause.png";
 	private final String PATH_NEXT_BUTTON = "../../images/next.png";
 	private final String PATH_PREVIOUS_BUTTON = "../../images/previous.png";
 	private final String PATH_NEXT_LIST_BUTTON = "../../images/nextList.png";
-	private final String PATH_PREVIOUS_LIST_BUTTON = "../../images/previousList.png";
+	private final String PATH_PREVIOUS_LIST_BUTTON = "../../images/previousList.png";*/
 	
 	
 	// ATTRIBUTS
@@ -47,7 +45,7 @@ public class GraphicPlayer implements Observer {
 	private JButton nextList;
 	private JButton previousList;
 	
-	private StdPlayerModel model;
+	private IPlayerModel model;
 	
 	// CONSTRUCTEURS
 	public GraphicPlayer(File playlistFile) {

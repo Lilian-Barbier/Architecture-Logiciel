@@ -5,11 +5,11 @@ import java.util.List;
 
 import view.Observer;
 
-public class PlayerSubject implements IObservable{
+public class Observable implements IObservable{
 
 	private List<Observer> observers;
 	
-	public PlayerSubject() {
+	public Observable() {
 		observers = new ArrayList<Observer>();
 	}
 	

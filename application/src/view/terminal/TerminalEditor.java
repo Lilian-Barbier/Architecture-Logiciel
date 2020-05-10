@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import facade.editor.IEditorModel;
 import facade.editor.StdEditorModel;
+import facade.player.IPlayerModel;
 
 import javax.swing.*;
 
@@ -22,7 +24,7 @@ public class TerminalEditor {
 	private final String importList = "importXPL";
 	private final String help = "help";
 
-	private StdEditorModel model;
+	private IEditorModel model;
 
 	// CONSTRUCTEURS
 	public TerminalEditor() {
