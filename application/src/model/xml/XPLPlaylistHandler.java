@@ -4,6 +4,7 @@ import model.list.IListBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+@SuppressWarnings("unused")
 public class XPLPlaylistHandler extends DefaultHandler {
 
 	/**
@@ -14,17 +15,17 @@ public class XPLPlaylistHandler extends DefaultHandler {
 	/**
 	 * L'indicateur de profondeur de la playlist
 	 */
-	int sublist;
+	private int sublist;
 
 	/**
 	 * Drapeau indiquant si on est dans une balise Audio ou non
 	 */
-	boolean audio;
+	private boolean audio;
 
 	/**
 	 * Drapeau indiquant si on est dans une balise Video ou non
 	 */
-	boolean video;
+	private boolean video;
 
 	public XPLPlaylistHandler(IListBuilder builder) {
 		if (builder == null) {
@@ -36,6 +37,7 @@ public class XPLPlaylistHandler extends DefaultHandler {
 		video = false;
 	}
 
+	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		if (qName.equalsIgnoreCase("sublist")) {
 			sublist++;
@@ -53,6 +55,7 @@ public class XPLPlaylistHandler extends DefaultHandler {
 		}
 	}
 
+	@Override
 	public void endElement(String uri, String localName, String qName) {
 		if (qName.equalsIgnoreCase("sublist")) {
 			sublist--;
@@ -60,6 +63,7 @@ public class XPLPlaylistHandler extends DefaultHandler {
 		}
 	}
 
+	@Override
 	public void characters(char[] data, int start, int length) {
 		builder.addPath(new String(data, start, length));
 		if (audio) {

@@ -52,9 +52,16 @@ public interface IEditorModel {
      * @throws IOException exception levée en cas d'erreur lors de la lecture du fichier
      */
     void addList(String path) throws IOException;
-    
-	public void enterList(int index);
 
-	public void ascendList();
+    /**
+     * Permet d'aller en profondeur à l'indice index de la sous-liste en cours d'édition, si cela est possible
+     * @param index l'indice où l'on souhaite plonger
+     */
+    void enterList(int index);
+
+    /**
+     * Permet de remonter à la liste parent de celle en cours d'édition, si cela est possible
+     */
+	void ascendList();
 
 }

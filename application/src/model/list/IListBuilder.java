@@ -1,6 +1,6 @@
 package model.list;
 
-import model.playlist.Playlist;
+import model.playlist.IPlaylist;
 
 public interface IListBuilder {
 
@@ -10,7 +10,7 @@ public interface IListBuilder {
      * Renvoie la Playlist associé au IListBuilder
      * @return this.playlist
      */
-    Playlist getPlaylist();
+    IPlaylist getPlaylist();
 
     // COMMANDES
 

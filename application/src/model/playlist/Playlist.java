@@ -37,16 +37,19 @@ public class Playlist implements IPlaylist {
 
     // METHODES
 
+    @Override
     public IMedia getPlaylist() {
     	return playlist;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
     // COMMANDES
 
+    @Override
     public void setPlaylist(SubList playlist) {
         if (playlist == null) {
             throw new AssertionError("Paramètre invalide Playlist setPlaylist");
@@ -54,6 +57,7 @@ public class Playlist implements IPlaylist {
         this.playlist = playlist;
     }
 
+    @Override
     public void setName(String name) {
         if (name == null) {
             throw new AssertionError("Paramètre invalide Playlist setName");
@@ -61,6 +65,7 @@ public class Playlist implements IPlaylist {
         this.name = name;
     }
 
+    @Override
     public void addList(List<IMedia> list) {
         if (list == null) {
             throw new AssertionError("Paramètre invalide Playlist addList");
@@ -71,6 +76,7 @@ public class Playlist implements IPlaylist {
         }
     }
 
+    @Override
     public void addFile(IMedia media) {
         if (media == null) {
             throw new AssertionError("Paramètre invalide Playlist addFile");

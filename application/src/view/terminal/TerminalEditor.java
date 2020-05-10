@@ -1,13 +1,12 @@
 package view.terminal;
 
+import facade.editor.IEditorModel;
+import facade.editor.StdEditorModel;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import facade.editor.IEditorModel;
-import facade.editor.StdEditorModel;
-import facade.player.IPlayerModel;
 
 public class TerminalEditor {
 

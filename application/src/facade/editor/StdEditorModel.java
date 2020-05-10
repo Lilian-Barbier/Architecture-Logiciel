@@ -29,7 +29,7 @@ public class StdEditorModel implements IEditorModel {
     /**
      * L'objet Playlist est la racine de notre playlist.
      */
-    private Playlist rootPlaylist;
+    private IPlaylist rootPlaylist;
 
     /**
      * On associe pour chaque profondeur parcourus un indice indiquant le media courant.
@@ -70,7 +70,7 @@ public class StdEditorModel implements IEditorModel {
      * Renvoie la Playlist générale en cours d'édition
      * @return this.rootPlaylist
      */
-    IPlaylist getRootPlaylist() {
+    public IPlaylist getRootPlaylist() {
         return rootPlaylist;
     }
 
@@ -92,7 +92,7 @@ public class StdEditorModel implements IEditorModel {
      * Renvoie la Playlist dans laquelle nous sommes en train d'éditer
      * @return this.rootPlaylist en suivant le chemin de headPositions
      */
-    IMedia getCurrentPlaylist() {
+    public IMedia getCurrentPlaylist() {
         SubList cursor = (SubList) getRootPlaylist().getPlaylist();
         if (getHeadPositions().size() > 1) {
             for (int k = 0; k <= getDepth(); ++k) {
@@ -245,25 +245,7 @@ public class StdEditorModel implements IEditorModel {
             System.out.println("Format non reconnu");
         }
     }
-
-    /**
-     * Augmente la profondeur de un
-     */
-    public void incrementDepth() {
-        depth = depth + 1;
-    }
-
-    /**
-     * Diminue la profondeur de un
-     */
-    public void decrementDepth() {
-        depth = depth - 1;
-    }
-
-    /**
-     * Permet d'aller en profondeur à l'indice index de la sous-liste en cours d'édition, si cela est possible
-     * @param index l'indice où l'on souhaite plonger
-     */
+    @Override
     public void enterList(int index) {
         SubList cursor = (SubList) getCurrentPlaylist();
         if (index > cursor.getContains().size() - 1 || index < 0) {
@@ -280,9 +262,7 @@ public class StdEditorModel implements IEditorModel {
 
     }
 
-    /**
-     * Permet de remonter à la liste parent de celle en cours d'édition, si cela est possible
-     */
+    @Override
     public void ascendList() {
         if (getHeadPositions().size() == 1) {
             System.out.println("Vous êtes déjà à la racine !");
@@ -290,5 +270,19 @@ public class StdEditorModel implements IEditorModel {
         }
         getHeadPositions().remove(getDepth());
         decrementDepth();
+    }
+
+    /**
+     * Augmente la profondeur de un
+     */
+    private void incrementDepth() {
+        depth = depth + 1;
+    }
+
+    /**
+     * Diminue la profondeur de un
+     */
+    private void decrementDepth() {
+        depth = depth - 1;
     }
 }

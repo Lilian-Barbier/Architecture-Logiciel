@@ -4,6 +4,7 @@ import model.list.IListBuilder;
 import model.list.IMedia;
 import model.list.StdListBuilder;
 import model.list.SubList;
+import model.playlist.IPlaylist;
 import model.playlist.Playlist;
 import model.xml.XMLPlaylistLoader;
 import view.Observer;
@@ -24,7 +25,7 @@ public class StdPlayerModel implements IPlayerModel {
     /**
      * L'objet Playlist est la racine de notre playlist.
      */
-    private Playlist rootPlaylist;
+    private IPlaylist rootPlaylist;
     
     /**
      * Temps écoulé sur le fichier en cours.
@@ -67,7 +68,7 @@ public class StdPlayerModel implements IPlayerModel {
     // METHODES
 
     @Override
-	public Playlist getRootPlaylist() {
+	public IPlaylist getRootPlaylist() {
         return rootPlaylist;
     }
 
@@ -117,7 +118,7 @@ public class StdPlayerModel implements IPlayerModel {
     // COMMANDES
 
     @Override
-	public void setRootPlaylist(Playlist playlist) {
+	public void setRootPlaylist(IPlaylist playlist) {
         if (playlist == null) {
             throw new AssertionError("Paramètre invalide StdPlayerModel setCurrentPlaylist");
         }

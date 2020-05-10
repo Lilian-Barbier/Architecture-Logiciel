@@ -5,7 +5,7 @@ import java.util.List;
 
 import view.Observer;
 
-public class Observable implements IObservable{
+public class Observable implements IObservable {
 
     /**
      * L'ensemble d'Observer

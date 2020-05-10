@@ -1,5 +1,6 @@
 package model.list;
 
+import model.playlist.IPlaylist;
 import model.playlist.Playlist;
 import model.util.LoadAudio;
 import model.util.LoadVideo;
@@ -20,7 +21,7 @@ public class StdListBuilder implements IListBuilder {
 	/**
 	 * La Playlist construite dans ce StdListBuilder
 	 */
-    private final Playlist playlist;
+    private final IPlaylist playlist;
 
 	/**
 	 * Le type du IMedia en cours de construction
@@ -73,7 +74,7 @@ public class StdListBuilder implements IListBuilder {
     // METHODES
 
 	@Override
-	public Playlist getPlaylist() {
+	public IPlaylist getPlaylist() {
         return playlist;
     }
 

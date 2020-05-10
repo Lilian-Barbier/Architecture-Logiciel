@@ -4,8 +4,9 @@ import java.io.File;
 
 import model.list.IMedia;
 import model.list.SubList;
-import model.playlist.Playlist;
+import model.playlist.IPlaylist;
 
+@SuppressWarnings("unused")
 public interface IPlayerModel extends IPlayerSubject {
 
 	// METHODES
@@ -14,7 +15,7 @@ public interface IPlayerModel extends IPlayerSubject {
 	 * Retourne la Playlist racine géré par la facade.
 	 * @return this.rootPlaylist
 	 */
-	Playlist getRootPlaylist();
+	IPlaylist getRootPlaylist();
 
 	/**
 	 * Retourne le temps passé sur le fichier courant.
@@ -53,7 +54,7 @@ public interface IPlayerModel extends IPlayerSubject {
 	 * Définis la liste racine.
 	 * @param playlist la Playlist à définir en temps que racine
 	 */
-	void setRootPlaylist(Playlist playlist);
+	void setRootPlaylist(IPlaylist playlist);
 
 	/**
 	 * Définis le temps passé sur le fichier courant, à la valeur donnée en paramétre.
