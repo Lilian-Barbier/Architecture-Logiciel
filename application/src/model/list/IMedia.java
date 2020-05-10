@@ -1,9 +1,9 @@
 package model.list;
 
-@SuppressWarnings("unused")
 public interface IMedia {
 
     // METHODES
+
     /**
      * Renvoie la durée du IMedia
      * @return this.duration
@@ -29,6 +29,7 @@ public interface IMedia {
     String getInfos();
 
     // COMMANDES
+
     /**
      * Modifie l'attribut duration avec celui passé en paramètre
      * @param duration la nouvelle durée souhaitée
@@ -46,5 +47,4 @@ public interface IMedia {
      * @param path le nouveau chemin souhaité
      */
     void setPath(String path);
-    
 }

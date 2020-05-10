@@ -37,13 +37,10 @@ public class XPLPlaylistHandler extends DefaultHandler {
 	}
 
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
-		System.out.println("Start Element :" + qName);
 		if (qName.equalsIgnoreCase("sublist")) {
 			sublist++;
 			builder.startSublist();
 			String title = attributes.getValue("title");
-			System.out.println(" attribute :" + title);
-			
 			builder.addName(title);
 		}
 		if (qName.equalsIgnoreCase("audio")) {
@@ -60,7 +57,6 @@ public class XPLPlaylistHandler extends DefaultHandler {
 		if (qName.equalsIgnoreCase("sublist")) {
 			sublist--;
 			builder.stopSublist();
-			System.out.println("End Element : sublist");
 		}
 	}
 
@@ -69,11 +65,9 @@ public class XPLPlaylistHandler extends DefaultHandler {
 		if (audio) {
 			audio = false;
 			builder.stopAudio();
-			System.out.println("End Element : audio");
 		} else if (video) {
 			video = false;
 			builder.stopVideo();
-			System.out.println("End Element : video");
 		}
 	}
 }

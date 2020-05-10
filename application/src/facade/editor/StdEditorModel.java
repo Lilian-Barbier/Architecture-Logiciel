@@ -13,14 +13,15 @@ import model.xml.XMLPlaylistSaver;
 
 import java.io.*;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class StdEditorModel implements IEditorModel {
 
     //  CONSTANTES
-    private static final String ERROR = "";
     private static final String MTA = "mta";
     private static final String MTV = "mtv";
-    private static final String SPLIT = ".";
+    private static final String XPL = "xpl";
+    private static final String POINT = "\\.";
 
 
     // ATTRIBUTS
@@ -33,7 +34,7 @@ public class StdEditorModel implements IEditorModel {
     /**
      * On associe pour chaque profondeur parcourus un indice indiquant le media courant.
      */
-    private Map<Integer, Integer> headPositions;
+    private final Map<Integer, Integer> headPositions;
 
     /**
      * Profondeur de la tête de lecture.
@@ -43,41 +44,90 @@ public class StdEditorModel implements IEditorModel {
     // CONSTRUCTEUR
 
     public StdEditorModel() {
-    	rootPlaylist = new Playlist();
+        String urlCourante = XMLPlaylistLoader.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+        urlCourante = urlCourante.substring(0, urlCourante.lastIndexOf("ArchiLogiciel"));
+        System.out.println(urlCourante);
+        if (!new File(urlCourante + "saves/").exists()) {
+            boolean b = new File(urlCourante + "saves/").mkdirs();
+            if (!b) {
+                System.out.println("Erreur lors de la création du dossier saves");
+            }
+        }
+        headPositions = new TreeMap<>();
+        headPositions.put(0,0);
+        depth = 0;
+        rootPlaylist = new Playlist();
     }
 
     // METHODES
 
+    /**
+     * Renvoie la Playlist générale en cours d'édition
+     * @return this.rootPlaylist
+     */
     IPlaylist getRootPlaylist() {
         return rootPlaylist;
     }
 
+    /**
+     * Renvoie la map gérant le parcours en profondeur.
+     * @return this.headPositions
+     */
+    public Map<Integer, Integer> getHeadPositions() {
+        return headPositions;
+    }
+
+    /**
+     * Renvoie la profondeur à laquelle nous sommes en train d'éditer
+     * @return this.depth
+     */
     public int getDepth() { return depth; }
+
+    /**
+     * Renvoie la Playlist dans laquelle nous sommes en train d'éditer
+     * @return this.rootPlaylist en suivant le chemin de headPositions
+     */
+    IMedia getCurrentPlaylist() {
+        SubList cursor = (SubList) getRootPlaylist().getPlaylist();
+        if (getHeadPositions().size() > 1) {
+            for (int k = 0; k <= getDepth(); ++k) {
+                IMedia media = cursor.getChild(getHeadPositions().get(k));
+                if (media instanceof SubList) {
+                    cursor = (SubList) cursor.getChild(getHeadPositions().get(k));
+                }
+            }
+            return cursor;
+        }
+        return cursor;
+    }
 
     @Override
     public String getInfos() {
-        int duration = 0;
-        /*for (IMedia list : getCurrentPlaylist().getPlaylist().subList(0, getCurrentPlaylist().getPlaylist().size())) {
-            duration = duration + list.getDuration();
-        }*/
-        return "playlist name = " + getRootPlaylist().getName() +
-                " total duration " + duration;
-   }
+        IMedia cursor = getCurrentPlaylist();
+        StringBuilder result = new StringBuilder("Current list name = " + cursor.getName() + "\n");
+        int k = 0;
+        if (cursor instanceof  SubList) {
+            SubList sublist = (SubList) cursor;
+            for (IMedia m : sublist.getContains()) {
+                result.append(k).append(" : ").append(m.getName()).append(" / ").append(m.getDuration()).append(" secondes\n");
+                ++k;
+            }
+        } else {
+            result.append(k).append(" : ").append(cursor.getName()).append(" / ").append(cursor.getDuration()).append(" secondes\n");
+            ++k;
+        }
+        return result.substring(0, result.length() - 1);
+    }
 
     // COMMANDES
-
-    void setRootPlaylist(Playlist playlist) {
-        if (playlist == null) {
-            throw new AssertionError("Paramètre invalide StdEditorModel setCurrentPlaylist");
-        }        rootPlaylist = playlist;
-    }
 
     @Override
     public void create(String name) {
         if (name == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel create");
         }
-        getRootPlaylist().setName(name);
+        SubList sublist = (SubList) getRootPlaylist().getPlaylist();
+        sublist.setName(name);
     }
 
     @Override
@@ -88,12 +138,15 @@ public class StdEditorModel implements IEditorModel {
         IListBuilder playlistBuilder = new StdListBuilder(f);
         XMLPlaylistLoader.load(f, playlistBuilder);
         rootPlaylist = playlistBuilder.getPlaylist();
+        String fileName = f.getAbsolutePath();
+        String[] splitter = fileName.split("/");
+        getRootPlaylist().setName(splitter[splitter.length - 1]);
     }
 
 
     @Override
     public void save() {
-    	XMLPlaylistSaver.save(this.getRootPlaylist());
+        XMLPlaylistSaver.save(this.getRootPlaylist());
     }
 
     @Override
@@ -102,16 +155,19 @@ public class StdEditorModel implements IEditorModel {
             throw new AssertionError("Paramètre invalide StdEditorModel addFile");
         }
         BufferedReader br = null;
-        String[] splitter = path.split(SPLIT);
+        String[] splitter = path.split(POINT);
         String extension = splitter[splitter.length - 1 ];
-        IMedia media = null;
+        IMedia media;
         switch (extension) {
-            case ERROR :
-                throw new AssertionError("Format non reconnu");
             case MTA :
                 media = new LoadAudio().loadFile(path);
+                break;
             case MTV :
                 media = new LoadVideo().loadFile(path);
+                break;
+            default :
+                System.out.println("Format non reconnu");
+                return;
         }
         try {
             br = new BufferedReader(new FileReader(path));
@@ -122,15 +178,13 @@ public class StdEditorModel implements IEditorModel {
             }
         } catch(FileNotFoundException exc) {
             System.out.println("Erreur d'ouverture");
+            return;
         } finally {
             if (br != null) {
                 br.close();
             }
         }
-        SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
-        for (int k = 0; k < getDepth(); ++k) {
-            cursor = (SubList)cursor.getChild(headPositions.get(k));
-        }
+        SubList cursor = (SubList) getCurrentPlaylist();
         cursor.add(media);
     }
 
@@ -149,6 +203,8 @@ public class StdEditorModel implements IEditorModel {
                     }
                 }
             }
+        } else {
+            System.out.println("Chemin du dossier incorrect");
         }
     }
 
@@ -157,34 +213,66 @@ public class StdEditorModel implements IEditorModel {
         if (path == null) {
             throw new AssertionError("Paramètre invalide StdEditorModel addList");
         }
-        File f = new File(path);
-        
-        IListBuilder playlistBuilder = new StdListBuilder(f);
-        XMLPlaylistLoader.load(f, playlistBuilder);
-        SubList sublist = (SubList) playlistBuilder.getPlaylist().getPlaylist();
-        SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
-        for (int k = 0; k < getDepth(); ++k) {
-            cursor = (SubList)cursor.getChild(headPositions.get(k));
+        String[] splitter = path.split(POINT);
+        String extension = splitter[splitter.length - 1 ];
+        if (XPL.equals(extension)) {
+            File f = new File(path);
+            IListBuilder playlistBuilder = new StdListBuilder(f);
+            XMLPlaylistLoader.load(f, playlistBuilder);
+            SubList sublist = (SubList) playlistBuilder.getPlaylist().getPlaylist();
+            SubList cursor = (SubList) getRootPlaylist().getPlaylist();
+            for (int k = 0; k < getDepth(); ++k) {
+                cursor = (SubList) cursor.getChild(getHeadPositions().get(k));
+            }
+            cursor.add(sublist);
+        } else {
+            System.out.println("Format non reconnu");
         }
-        cursor.add(sublist);
     }
 
+    /**
+     * Augmente la profondeur de un
+     */
     public void incrementDepth() {
         depth = depth + 1;
     }
 
+    /**
+     * Diminue la profondeur de un
+     */
     public void decrementDepth() {
         depth = depth - 1;
     }
 
-	public void enterList(int index) {
+    /**
+     * Permet d'aller en profondeur à l'indice index de la sous-liste en cours d'édition, si cela est possible
+     * @param index l'indice où l'on souhaite plonger
+     */
+    public void enterList(int index) {
+        SubList cursor = (SubList) getCurrentPlaylist();
+        if (index > cursor.getContains().size() - 1 || index < 0) {
+            System.out.println("Indice incorrect !");
+            return;
+        }
+        IMedia m = cursor.getChild(index);
+        if (!(m instanceof SubList)) {
+            System.out.println("Ce n'est pas une sous-liste !");
+            return;
+        }
         incrementDepth();
-        headPositions.put(getDepth(), index);
-	}
+        getHeadPositions().put(getDepth(), index);
 
-	public void ascendList() {
-        headPositions.remove(getDepth());
+    }
+
+    /**
+     * Permet de remonter à la liste parent de celle en cours d'édition, si cela est possible
+     */
+    public void ascendList() {
+        if (getHeadPositions().size() == 1) {
+            System.out.println("Vous êtes déjà à la racine !");
+            return;
+        }
+        getHeadPositions().remove(getDepth());
         decrementDepth();
-	}
+    }
 }
-

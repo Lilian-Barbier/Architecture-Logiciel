@@ -1,6 +1,5 @@
 package model.list;
 
-@SuppressWarnings("unused")
 public class Audio extends Media {
 
     // ATTRIBUTS

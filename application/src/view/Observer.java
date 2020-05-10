@@ -1,7 +1,8 @@
 package view;
 
 public interface Observer {
-
-	public void update();
-	
+	/**
+	 * Permet la mise à jour de la vue en récupérant les informations du modèle via un Controller, patron MVC
+	 */
+	void update();
 }

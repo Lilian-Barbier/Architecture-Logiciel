@@ -1,7 +1,0 @@
-+ Facade : on ne modifie pas directement le model mais une facade de ce modèle (chapitre 4)
-
-+ Observateur : Pour mettre à jour la vue des que le model seras modifié (lors de la lecture)
-
-+ Builder : pour construire les objet du composite comme dans l'exemple BuilderMemoXML (chapitre 3)
-
-+ Factory pour l'interface graphique ou en ligne ?

@@ -25,14 +25,11 @@ public class LoadVideo implements LoadFiles {
             v.setName(br.readLine());
             v.setResolution(br.readLine());
         } catch(FileNotFoundException exc) {
-            System.out.println("Erreur d'ouverture");
-            throw new AssertionError("Erreur d'ouverture");
+            System.out.println("Chemin de fichier introuvable");
         } catch (NumberFormatException e) {
             System.out.println("Erreur ParseInt");
-            throw new AssertionError("Erreur ParseInt");
-		} catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Erreur IOException");
-            throw new AssertionError("Erreur IOException");
 		} finally {
             try {
                 if (br != null) {

@@ -3,7 +3,6 @@ package model.playlist;
 import model.list.IMedia;
 import model.list.SubList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -15,7 +14,6 @@ public class Playlist implements IPlaylist {
      * L'ensemble des IMedia contenus dans cette Playlist
      */
 	private IMedia playlist;
-    //private List<IMedia> playlist;
 
     /**
      * Le nom de la Playlist
@@ -26,7 +24,6 @@ public class Playlist implements IPlaylist {
 
     public Playlist() {
     	playlist = new SubList();
-        //playlist = new ArrayList<>();
         name = "new playlist";
     }
 
@@ -41,14 +38,9 @@ public class Playlist implements IPlaylist {
 
     // METHODES
 
-    /*public List<IMedia> getPlaylist() {
-        return playlist;
-    }*/
-    
     public IMedia getPlaylist() {
     	return playlist;
     }
-    
 
     public String getName() {
         return name;

@@ -1,40 +1,29 @@
 package view.graphic;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-
 import facade.player.StdPlayerModel;
 import model.list.IMedia;
 import view.Observer;
-import view.terminal.TerminalPlayer;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 
 public class GraphicPlayer implements Observer {
 	
-	private final String PATH_PLAY_BUTTON = "../../images/play.png";
-	private final String PATH_PAUSE_BUTTON = "../../images/pause.png";
-	private final String PATH_NEXT_BUTTON = "../../images/next.png";
-	private final String PATH_PREVIOUS_BUTTON = "../../images/previous.png";
-	private final String PATH_NEXT_LIST_BUTTON = "../../images/nextList.png";
-	private final String PATH_PREVIOUS_LIST_BUTTON = "../../images/previousList.png";
-	
-	
+	private static final String PATH_PLAY_BUTTON = "src/images/play.png";
+	private static final String PATH_PAUSE_BUTTON = "src/images/pause.png";
+	private static final String PATH_NEXT_BUTTON = "src/images/next.png";
+	private static final String PATH_PREVIOUS_BUTTON = "src/images/previous.png";
+	private static final String PATH_NEXT_LIST_BUTTON = "src/images/nextList.png";
+	private static final String PATH_PREVIOUS_LIST_BUTTON = "src/images/previousList.png";
+	private static final String PATH_STOP_BUTTON = "src/images/stop.png";
+
+
+
+
 	// ATTRIBUTS
 	private JFrame mainFrame;
 	private JLabel infosCurrentFile;
-	
 
 	private JLabel timeProgress;
 	private JLabel fullTime;
@@ -46,10 +35,12 @@ public class GraphicPlayer implements Observer {
 	private JButton backward;
 	private JButton nextList;
 	private JButton previousList;
-	
+	private JButton stop;
+
 	private StdPlayerModel model;
 	
 	// CONSTRUCTEURS
+
 	public GraphicPlayer(File playlistFile) {
 		createModel(playlistFile);
         createView();
@@ -66,11 +57,18 @@ public class GraphicPlayer implements Observer {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
 	}
-	
+
+	/**
+	 * Instancie le model
+	 * @param playlistFile le fichier Playlist à charger au démarrage
+	 */
 	private void createModel(File playlistFile) {
         model = new StdPlayerModel(playlistFile);
     }
-	
+
+	/**
+	 * Création des différents éléments de la vue
+	 */
 	private void createView() {
         mainFrame = new JFrame("Graphic Player");
         
@@ -81,34 +79,33 @@ public class GraphicPlayer implements Observer {
     	progressBar = new JProgressBar();
     	progressBar.setEnabled(false);
     	
-        play = new JButton("play");
-    	pause = new JButton("Pause");
-    	forward = new JButton("Next");
-    	backward = new JButton("Previous");
-    	nextList = new JButton("NextList");
-    	previousList = new JButton("PreviousList");
+        play = new JButton(new ImageIcon(PATH_PLAY_BUTTON));
+    	pause = new JButton(new ImageIcon(PATH_PAUSE_BUTTON));
+    	forward = new JButton(new ImageIcon(PATH_NEXT_BUTTON));
+    	backward = new JButton(new ImageIcon(PATH_PREVIOUS_BUTTON));
+    	nextList = new JButton(new ImageIcon(PATH_NEXT_LIST_BUTTON));
+    	previousList = new JButton(new ImageIcon(PATH_PREVIOUS_LIST_BUTTON));
+    	stop = new JButton(new ImageIcon(PATH_STOP_BUTTON));
 	}
-	
 
+	/**
+	 * Dispose les composants sur la fenêtre
+	 */
 	 private void placeComponents() {
-		 
 		 JPanel p = new JPanel(new GridLayout(3, 1)); {
-			 
 			 //zone d’affichage des informations du fichier en cours de lecture
 			 JPanel q = new JPanel(new FlowLayout(FlowLayout.CENTER)); {
 				 q.add(infosCurrentFile);
 			 }
 			 p.add(q);
-			 
-			 //zone affichant la progression de la lecture
+
+		 	 //zone affichant la progression de la lecture
 			 q = new JPanel(new GridLayout(1, 3)); {
 				 JPanel r = new JPanel(); {
 					 r.add(timeProgress);
 				 }
 				 q.add(r);
-				 
 				 q.add(progressBar);
-				 
 				 r = new JPanel(); {
 					 r.add(fullTime);
 				 }
@@ -122,95 +119,39 @@ public class GraphicPlayer implements Observer {
 				 q.add(backward);
 				 q.add(play);
 				 q.add(pause);
+				 q.add(stop);
 				 q.add(forward);
 				 q.add(nextList);
 			 } 
 			 p.add(q);
 		 }
-		 
 		 mainFrame.add(p, BorderLayout.CENTER);
 	 }
-	 
-		
+
+	/**
+	 * Création des Controller
+	 */
 	private void createController() {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    
 		model.attach(this);
-		
-        play.addActionListener(new ActionListener() {
-        	@Override
-        	public void actionPerformed(ActionEvent e) {
-        		model.play();
-            }
-        });
-        
-        pause.addActionListener(new ActionListener() {
-        	@Override
-        	public void actionPerformed(ActionEvent e) {
-        		model.pause();
-            }
-        });
-        
-        forward.addActionListener(new ActionListener() {
-        	@Override
-        	public void actionPerformed(ActionEvent e) {
-        		model.forward();
-            }
-        });
-        
-        backward.addActionListener(new ActionListener() {
-        	@Override
-        	public void actionPerformed(ActionEvent e) {
-        		model.backward();
-            }
-        });
-        
-        nextList.addActionListener(new ActionListener() {
-        	@Override
-        	public void actionPerformed(ActionEvent e) {
-        		model.nextList();
-            }
-        });
-        
-        previousList.addActionListener(new ActionListener() {
-        	@Override
-        	public void actionPerformed(ActionEvent e) {
-        		model.previousList();
-            }
-        });
-	}	
-
-	// POINT D'ENTREE
-	public static void main(String[] args) {
-
-		if(args.length != 1){
-			new AssertionError("TerminalPlayer main() : Argument manquant !");
-		}
-		
-		File f = new File(args[0]);
-	
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new GraphicPlayer(f).display();
-			}
-		});
+        play.addActionListener(e -> model.play());
+        pause.addActionListener(e -> model.pause());
+        forward.addActionListener(e -> model.forward());
+        backward.addActionListener(e -> model.backward());
+        nextList.addActionListener(e -> model.nextList());
+        previousList.addActionListener(e -> model.previousList());
+        stop.addActionListener(e -> model.stop());
 	}
-
 
 	@Override
 	public void update() {
-		
 		IMedia currentFile = model.getCurrentFile();
-		
 		String newInfos = "<html>";
 		newInfos += model.getPathSubList() + "<br/>";
 		newInfos += currentFile.getInfos().replace(";", "<br/>") + "<br/>";
 		newInfos += "</html>";
-				
 		int time = model.getCurrentTime();
 		int mediaDuration = currentFile.getDuration();
-		
 		timeProgress.setText("" + time);
 		progressBar.setValue(time);
 		progressBar.setMaximum(mediaDuration);
@@ -218,4 +159,13 @@ public class GraphicPlayer implements Observer {
 		infosCurrentFile.setText(newInfos);
 	}
 
+	// POINT D'ENTREE
+	public static void main(String[] args) {
+		if (args.length != 1){
+			System.out.println("TerminalPlayer main() : Argument manquant !");
+			System.exit(-1);
+		}
+		File f = new File(args[0]);
+		SwingUtilities.invokeLater(() -> new GraphicPlayer(f).display());
+	}
 }
