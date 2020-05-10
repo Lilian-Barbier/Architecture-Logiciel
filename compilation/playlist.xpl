@@ -17,8 +17,8 @@
 		
 
 		<sublist title="Guide du voyageur Galactique">
-			<audio>musique/bbc radio collection - The Hitch hicker Guide to the galaxy/01 - this is the story.mta</audio>
-			<audio>musique/bbc radio collection - The Hitch hicker Guide to the galaxy/02 - youve got to build bypasses.mta</audio>
+			<video>videos/BigBuckBunny.mtv</video>
+			<video>videos/science-etonnante.mtv</video>
 		
 			<sublist title="Guide du 3">
 				<audio>musique/bbc radio collection - The Hitch hicker Guide to the galaxy/01 - this is the story.mta</audio>
