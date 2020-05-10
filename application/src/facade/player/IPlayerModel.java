@@ -9,39 +9,62 @@ import view.Observer;
 
 public interface IPlayerModel extends IPlayerSubject {
 
+	// METHODES
+
 	/**
 	 * Retourne la Playlist racine géré par la facade.
-	 * @return
+	 * @return this.rootPlaylist
 	 */
 	Playlist getRootPlaylist();
 
 	/**
 	 * Retourne le temps passé sur le fichier courant.
-	 * @return
+	 * @return this.currentTime
 	 */
 	int getCurrentTime();
 
 	/**
-	 * Retourne les informations concernant la listes racines.
-	 * @return
+	 * Retourne le chemin des sous listes jusqu'au fichier courant.
+	 * @return this.pathSubList
+	 */
+	String getPathSubList();
+
+	/**
+	 * Retourne l'élément courant.
+	 * @return la Playlist dans laquelle nous somme en train de lire.
+	 */
+	IMedia getCurrentFile();
+
+	/**
+	 * Retourne la premiére sous-liste parent.
+	 * @return la sous-liste parente de la courrante, si cela est possible.
+	 */
+	SubList getParentCurrentFile();
+
+
+	/**
+	 * Affiche les informations associés à la Playlist
+	 * @return les informations sous forme de String
 	 */
 	String getInfos();
 
+	// COMMANDES
+
 	/**
-	 * Définis la liste Racine.
-	 * @param playlist
+	 * Définis la liste racine.
+	 * @param playlist la Playlist à définir en temps que racine
 	 */
 	void setRootPlaylist(Playlist playlist);
 
 	/**
 	 * Définis le temps passé sur le fichier courant, à la valeur donnée en paramétre.
-	 * @param time
+	 * @param time le temps à remplacer
 	 */
 	void setCurrentTime(int time);
 
 	/**
-	 * Charge les données d'une playlist à partir d'un fichier.
-	 * @param f
+	 * Charge les données d'une Playlist à partir d'un fichier.
+	 * @param f le fichier source de la Playlist
 	 */
 	void load(File f);
 

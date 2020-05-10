@@ -18,8 +18,7 @@ public class LoadAudio implements LoadFiles {
         
 		Audio a = new Audio(path);
         BufferedReader br = null;
-        
-        
+
         /*
          * Ici Le choix de lire les données devrait dépendre du type d'extension
          * Switch selon le type ?

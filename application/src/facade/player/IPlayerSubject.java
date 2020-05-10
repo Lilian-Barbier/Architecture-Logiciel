@@ -2,14 +2,19 @@ package facade.player;
 
 import view.Observer;
 
+@SuppressWarnings("unused")
 public interface IPlayerSubject {
 
 	/**
-	 * Attache un Observeur
-	 * @param o
+	 * Attache un Observer
+	 * @param o l'Observer à attacher au modèle
 	 */
-	public void attach(Observer o);
-	
-	public void dettach(Observer o);
+	void attach(Observer o);
+
+	/**
+	 * Détache un Observer
+	 * @param o l'Observer à détacher du modèle
+	 */
+	void dettach(Observer o);
 	
 }

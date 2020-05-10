@@ -1,6 +1,7 @@
 package model.xml;
 
-import java.io.FileWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -21,16 +22,28 @@ public class XMLPlaylistSaver {
 			String urlCourante = XMLPlaylistSaver.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 			urlCourante = urlCourante.substring(0, urlCourante.lastIndexOf("ArchiLogiciel"));
 			int index = iPlaylist.getPlaylist().getName().lastIndexOf(".");
+			String s;
 			if (index != -1) {
-				xsw = xof.createXMLStreamWriter(new FileWriter(urlCourante + "saves/"
-						+ iPlaylist.getPlaylist().getName().substring(0, index) + ".xpl"));
+				s = urlCourante + "saves/" + iPlaylist.getPlaylist().getName().substring(0, index) + ".xpl";
+				xsw = xof.createXMLStreamWriter(new FileWriter(s));
 			} else {
-				xsw = xof.createXMLStreamWriter(new FileWriter(urlCourante + "saves/"
-						+ iPlaylist.getPlaylist().getName() + ".xpl"));
+				s = urlCourante + "saves/" + iPlaylist.getPlaylist().getName() + ".xpl";
+				xsw = xof.createXMLStreamWriter(new FileWriter(s));
 			}
-			xsw.writeStartDocument();
+			xsw.writeStartDocument("UTF-8","1.0");
+			File src = new File("src/Playlist.dtd");
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(new FileInputStream(src), "UTF-8"));
+			// Créer l'objet File Writer
+			String str;
+			// Copie le contenu dans le nouveau fichier
+			while ((str = br.readLine()) != null) {
+				xsw.writeDTD(str);
+				xsw.writeDTD("\n");
+			}
 			xsw.writeStartElement("playlist");
 			SubList media = (SubList) iPlaylist.getPlaylist();
+			xsw.writeCharacters("\n");
 			saveDeep(xsw, media);
 			xsw.writeEndElement();
 			xsw.writeEndDocument();
@@ -58,11 +71,11 @@ public class XMLPlaylistSaver {
 		for (IMedia l : sublist.getContains()) {
 			if (l instanceof Audio) {
 				xsw.writeStartElement("audio");
-				xsw.writeCData(l.getPath());
+				xsw.writeCharacters(l.getPath());
 			}
 			if (l instanceof Video) {
 				xsw.writeStartElement("video");
-				xsw.writeCData(l.getPath());
+				xsw.writeCharacters(l.getPath());
 			}
 			if (l instanceof SubList) {
 				xsw.writeStartElement("sublist");
@@ -70,6 +83,7 @@ public class XMLPlaylistSaver {
 				saveDeep(xsw, (SubList) l);
 			}
 			xsw.writeEndElement();
+			xsw.writeCharacters("\n");
 		}
 	}
 }

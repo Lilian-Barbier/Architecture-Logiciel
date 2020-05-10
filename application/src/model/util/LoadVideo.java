@@ -24,7 +24,7 @@ public class LoadVideo implements LoadFiles {
             v.setDuration(Integer.parseInt(br.readLine()));
             v.setName(br.readLine());
             v.setResolution(br.readLine());
-        } catch(FileNotFoundException exc) {
+        } catch (FileNotFoundException exc) {
             System.out.println("Chemin de fichier introuvable");
         } catch (NumberFormatException e) {
             System.out.println("Erreur ParseInt");

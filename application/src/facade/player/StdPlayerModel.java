@@ -16,7 +16,10 @@ import java.util.TreeMap;
 
 public class StdPlayerModel implements IPlayerModel {
 
-	private IObservable obs;
+    /**
+     * Gère l'ensemble des Observers du modèle.
+     */
+	private final IObservable obs;
 	
     /**
      * L'objet Playlist est la racine de notre playlist.
@@ -71,6 +74,40 @@ public class StdPlayerModel implements IPlayerModel {
     @Override
 	public int getCurrentTime() {
         return currentTime;
+    }
+
+    @Override
+    public String getPathSubList() {
+        StringBuilder ret = new StringBuilder(this.rootPlaylist.getName() + "/");
+
+        SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
+        for (int k = 0; k < depth; ++k) {
+            cursor = (SubList)cursor.getChild(headPositions.get(k));
+            ret.append(cursor.getName()).append("/");
+        }
+
+        return ret.toString();
+    }
+
+    @Override
+    public IMedia getCurrentFile() {
+
+        SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
+        for (int k = 0; k < depth; ++k) {
+            cursor = (SubList)cursor.getChild(headPositions.get(k));
+        }
+
+        return cursor.getChild(headPositions.get(depth));
+    }
+
+    @Override
+    public SubList getParentCurrentFile() {
+
+        SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
+        for (int k = 0; k < depth; ++k) {
+            cursor = (SubList)cursor.getChild(headPositions.get(k));
+        }
+        return cursor;
     }
 
     @Override
@@ -221,45 +258,7 @@ public class StdPlayerModel implements IPlayerModel {
         backward();
         
     }
-    
-    @Override
-	public String getPathSubList() {
-    	String ret = this.rootPlaylist.getName() + "/";
-    	
-    	SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
-    	for (int k = 0; k < depth; ++k) {
-    		cursor = (SubList)cursor.getChild(headPositions.get(k));
-        	ret += cursor.getName() + "/";
-    	}
-    	
-    	return ret;
-    }
 
-    @Override
-	public IMedia getCurrentFile() {
-    	
-    	SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
-    	for (int k = 0; k < depth; ++k) {
-    		cursor = (SubList)cursor.getChild(headPositions.get(k));
-    	}
-    	
-    	return cursor.getChild(headPositions.get(depth));
-    }
-
-    @Override
-	public SubList getParentCurrentFile() {
-
-    	SubList cursor = (SubList) this.rootPlaylist.getPlaylist();
-    	for (int k = 0; k < depth; ++k) {
-    		cursor = (SubList)cursor.getChild(headPositions.get(k));
-    	}
-    	
-    	return cursor;
-    }
-
-    
-    
-    
     /**
      * Incrémente la profondeur du compteur de sous-liste de 1
      */
@@ -297,8 +296,8 @@ public class StdPlayerModel implements IPlayerModel {
 	}
     
     public void attach ( Observer o)  { obs.attach(o); }
-    public void dettach ( Observer o)  { obs.dettach(o); }
 
+    public void dettach ( Observer o)  { obs.dettach(o); }
 }
 
 

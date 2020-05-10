@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import facade.player.StdPlayerModel;
+import model.xml.XMLPlaylistLoader;
 import view.Observer;
 
 public class TerminalPlayer implements Observer {

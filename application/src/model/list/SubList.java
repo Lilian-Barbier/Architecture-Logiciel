@@ -22,7 +22,7 @@ public class SubList extends Media {
 
     public SubList() {
         this.setDuration(0);
-        this.setName("new list");
+        this.setName("new_list");
         this.contains = new ArrayList<>();
     }
     

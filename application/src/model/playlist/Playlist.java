@@ -24,7 +24,7 @@ public class Playlist implements IPlaylist {
 
     public Playlist() {
     	playlist = new SubList();
-        name = "new playlist";
+        name = "new_playlist";
     }
 
     public Playlist(String name) {
@@ -32,7 +32,6 @@ public class Playlist implements IPlaylist {
             throw new AssertionError("Paramètre invalide Playlist constructeur");
         }
         playlist = new SubList(0,name);
-        //playlist = new ArrayList<>();
         this.name = name;
     }
 
