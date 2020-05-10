@@ -1,0 +1,48 @@
+@startuml
+package view {
+
+    interface Observer {
+	void update();
+    }
+
+    package graphic {
+        class GraphicPlayer implements Observer {
+        	public void display()
+        	private void createModel()
+        	private void createView()
+        	private void placeComponents()
+        	private void createController()
+        	public static void main(String[] args)
+            public void updateFile(String newInfos)
+        }
+        GraphicPlayer ..> javax.swing.JFrame : mainFrame
+        GraphicPlayer ..> javax.swing.JLabel : infosCurrentFile, timeProgress, fullTime
+        GraphicPlayer ..> javax.swing.JProgressBar : progressBar
+        GraphicPlayer ..> javax.swing.JButton : play, pause, next, previous, nextList, previousList
+        GraphicPlayer ..> facade.player.IPlayerModel : model
+    }
+    package terminal {
+        class TerminalPlayer implements Observer {
+        	private void createModel(File playlistFile)
+        	private void createController()
+        	public static void main(String[] args)
+        }
+        
+        TerminalPlayer ..> facade.player.IPlayerModel : model
+    }
+}
+
+
+package facade.player{
+
+	interface IObservable {
+		void attach(Observer o);
+		void dettach(Observer o);
+		void notifyObservers();
+	}
+
+
+}
+
+
+@enduml

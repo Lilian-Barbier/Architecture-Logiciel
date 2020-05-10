@@ -5,7 +5,6 @@ import java.io.File;
 import model.list.IMedia;
 import model.list.SubList;
 import model.playlist.Playlist;
-import view.Observer;
 
 public interface IPlayerModel extends IPlayerSubject {
 
@@ -102,23 +101,5 @@ public interface IPlayerModel extends IPlayerSubject {
 	 * Termine la sous-liste actuelle et revient à l’entrée précédente dans la liste parent.
 	 */
 	void previousList();
-
-	/**
-	 * Retourne le chemin des sous listes jusqu'au fichier courant.
-	 * @return SousListes
-	 */
-	String getPathSubList();
-
-	/**
-	 * Retourne l'élément courant.
-	 * @return
-	 */
-	IMedia getCurrentFile();
-
-	/**
-	 * Retourne la premiére sous-liste parent.
-	 * @return
-	 */
-	SubList getParentCurrentFile();
 
 }

@@ -45,6 +45,9 @@ public class StdEditorModel implements IEditorModel {
 
     public StdEditorModel() {
         String urlCourante = XMLPlaylistLoader.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+    
+        System.out.println(urlCourante);
+        
         urlCourante = urlCourante.substring(0, urlCourante.lastIndexOf("ArchiLogiciel"));
         System.out.println(urlCourante);
         if (!new File(urlCourante + "saves/").exists()) {
